@@ -1,0 +1,34 @@
+{
+  "default": {
+    "protocol": "http",
+    "host": "localhost",
+    "port": "1111",
+    "path": "/"
+  },
+  "DataBase": {
+      "databaseConnectionString": "mongodb://127.0.0.1:27017/expresscart"
+  },
+  "products" : {
+    "productsPerPage": 6,
+    "protocol": "http",
+    "host": "localhost",
+    "port": "1111",
+    "paths": {
+      "addNewProduct": "admin/product/new",
+      "editProduct": "admin/product/edit",
+      "allProduct": "admin/products"
+    }
+  },
+  "orders": {
+    "topNOrderCount": 10,
+    "initialScore": 11111
+  },
+  "customers": {
+    "topNCustomers": 10
+  },
+  "redis": {
+      "host": "127.0.0.1",
+      "port": 6379,
+      "MAX_RETRY_REDIS": 5
+  }
+}

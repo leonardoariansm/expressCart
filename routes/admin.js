@@ -9,6 +9,9 @@ const multer = require('multer');
 const glob = require('glob');
 const mime = require('mime-type/with-db');
 const router = express.Router();
+const UserServices = require('../classes/services/UserServices');
+const StaticFunctions = require('../classes/utilities/staticFunctions');
+const AdminServices = require('../classes/services/AdminServices');
 
 // Admin section
 router.get('/admin', common.restrict, (req, res, next) => {
@@ -24,66 +27,44 @@ router.get('/admin/logout', (req, res) => {
 });
 
 // login form
-router.get('/admin/login', (req, res) => {
-    let db = req.app.db;
-
-    db.users.count({}, (err, userCount) => {
-        if(err){
-            // if there are no users set the "needsSetup" session
-            req.session.needsSetup = true;
-            res.redirect('/admin/setup');
-        }
-        // we check for a user. If one exists, redirect to login form otherwise setup
-        if(userCount > 0){
-            // set needsSetup to false as a user exists
+router.get('/admin/login', async (req, res) => {
+    try{
+        let numOfUsers = await UserServices.getUserPresentCount();
+        if(StaticFunctions.isNotEmpty(numOfUsers) && numOfUsers > 0){
             req.session.needsSetup = false;
             res.render('login', {
                 title: 'Login',
                 referringUrl: req.header('Referer'),
-                config: req.app.config,
                 message: common.clearSessionValue(req.session, 'message'),
                 messageType: common.clearSessionValue(req.session, 'messageType'),
                 helpers: req.handlebars.helpers,
                 showFooter: 'showFooter'
             });
         }else{
-            // if there are no users set the "needsSetup" session
             req.session.needsSetup = true;
             res.redirect('/admin/setup');
         }
-    });
+    }catch(err){
+        req.session.needsSetup = true;
+        res.redirect('/admin/setup');
+    }
 });
 
 // login the user and check the password
-router.post('/admin/login_action', (req, res) => {
-    let db = req.app.db;
-
-    db.users.findOne({userEmail: common.mongoSanitize(req.body.email)}, (err, user) => {
-        if(err){
-            res.status(400).json({message: 'A user with that email does not exist.'});
-            return;
-        }
-
-        // check if user exists with that email
-        if(user === undefined || user === null){
-            res.status(400).json({message: 'A user with that email does not exist.'});
-        }else{
-            // we have a user under that email so we compare the password
-            bcrypt.compare(req.body.password, user.userPassword)
-            .then((result) => {
-                if(result){
-                    req.session.user = req.body.email;
-                    req.session.usersName = user.usersName;
-                    req.session.userId = user._id.toString();
-                    req.session.isAdmin = user.isAdmin;
-                    res.status(200).json({message: 'Login successful'});
-                }else{
-                    // password is not correct
-                    res.status(400).json({message: 'Access denied. Check password and try again.'});
-                }
-            });
-        }
-    });
+router.post('/admin/login_action', async (req, res) => {
+    let result = await UserServices.validateLoginRequest(req, res);
+    let isValidLoginRequest = result.isValidLoginRequest;
+    let message = result.message;
+    let userDetails = result.userDetails;
+    if(StaticFunctions.isNotEmpty(isValidLoginRequest) && isValidLoginRequest === true){
+        req.session.user = userDetails.userEmail;
+        req.session.userId = userDetails._id.toString();
+        req.session.usersName = userDetails.usersName;
+        req.session.isAdmin = userDetails.isAdmin;
+        res.status(200).json(message);
+    }else{
+        res.status(400).json(message);
+    }
 });
 
 // setup form is shown when there are no users setup in the DB
@@ -391,28 +372,17 @@ router.post('/admin/settings/menu/save_order', common.restrict, common.checkAcce
 });
 
 // validate the permalink
-router.post('/admin/api/validate_permalink', (req, res) => {
+router.post('/admin/api/validate_permalink', async (req, res) => {
     // if doc id is provided it checks for permalink in any products other that one provided,
     // else it just checks for any products with that permalink
-    const db = req.app.db;
-
-    let query = {};
-    if(typeof req.body.docId === 'undefined' || req.body.docId === ''){
-        query = {productPermalink: req.body.permalink};
-    }else{
-        query = {productPermalink: req.body.permalink, _id: {$ne: common.getId(req.body.docId)}};
+    try{
+        let validateResult = await AdminServices.validatePermaLink(req, res);
+        res.status(validateResult.status).send(validateResult.message);
+    }catch(err){
+        console.log(colors.red(err.message));
+        console.log(colors.red(err.static));
+        throw err;
     }
-
-    db.products.count(query, (err, products) => {
-        if(err){
-            console.info(err.stack);
-        }
-        if(products > 0){
-            res.status(400).json({message: 'Permalink already exists'});
-        }else{
-            res.status(200).json({message: 'Permalink validated successfully'});
-        }
-    });
 });
 
 // upload the file
@@ -425,7 +395,7 @@ router.post('/admin/file/upload', common.restrict, common.checkAccess, upload.si
 
         // Get the mime type of the file
         const mimeType = mime.lookup(file.originalname);
-        
+
         // Check for allowed mime type and file size
         if(!common.allowedMimeType.includes(mimeType) || file.size > common.fileSizeLimit){
             // Remove temp file

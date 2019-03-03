@@ -582,7 +582,7 @@ $(document).ready(function (){
             $.ajax({
                 method: 'POST',
                 url: '/admin/api/validate_permalink',
-                data: {'permalink': $('#frmProductPermalink').val(), 'docId': $('#frmProductId').val()}
+                data: {'permalink': $('#frmProductPermalink').val()}
             })
             .done(function(msg){
                 showNotification(msg, 'success');

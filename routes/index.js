@@ -4,6 +4,7 @@ const colors = require('colors');
 const async = require('async');
 const _ = require('lodash');
 const common = require('../lib/common');
+const config = require('config');
 
 // These is the customer facing routes
 router.get('/payment/:orderId', async (req, res, next) => {
@@ -521,9 +522,7 @@ router.get('/page/:pageNum', (req, res, next) => {
 
 // The main entry point of the shop
 router.get('/:page?', (req, res, next) => {
-    let db = req.app.db;
-    let config = req.app.config;
-    let numberProducts = config.productsPerPage ? config.productsPerPage : 6;
+    let numberProducts = config.get('products.productsPerPage') ?  config.get('products.productsPerPage')  : 6;
 
     // if no page is specified, just render page 1 of the cart
     if(!req.params.page){

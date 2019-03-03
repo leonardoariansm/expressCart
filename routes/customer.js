@@ -4,6 +4,7 @@ const colors = require('colors');
 const randtoken = require('rand-token');
 const bcrypt = require('bcryptjs');
 const common = require('../lib/common');
+const CustomerService = require('../classes/services/CustomerService');
 
 // insert a customer
 router.post('/customer/create', (req, res) => {
@@ -83,9 +84,8 @@ router.get('/admin/customer/view/:id?', common.restrict, (req, res) => {
 
 // customers list
 router.get('/admin/customers', common.restrict, (req, res) => {
-    const db = req.app.db;
-
-    db.customers.find({}).limit(20).sort({created: -1}).toArray((err, customers) => {
+    try{
+        const customers = CustomerService.getTopCustomer();
         res.render('customers', {
             title: 'Customers - List',
             admin: true,
@@ -94,9 +94,20 @@ router.get('/admin/customers', common.restrict, (req, res) => {
             helpers: req.handlebars.helpers,
             message: common.clearSessionValue(req.session, 'message'),
             messageType: common.clearSessionValue(req.session, 'messageType'),
-            config: req.app.config
         });
-    });
+    }catch(err){
+        res.render('customers', {
+            title: 'Customers - List',
+            admin: true,
+            customers: [],
+            session: req.session,
+            helpers: req.handlebars.helpers,
+            message: common.clearSessionValue(req.session, 'message'),
+            messageType: common.clearSessionValue(req.session, 'messageType'),
+        });
+        throw err;
+    }
+
 });
 
 // Filtered customers list

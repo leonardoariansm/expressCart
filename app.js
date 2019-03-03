@@ -1,55 +1,21 @@
 const express = require('express');
+const app = express();
+const fs = require('fs');
 const path = require('path');
-const logger = require('morgan');
-const cookieParser = require('cookie-parser');
-const bodyParser = require('body-parser');
-const session = require('express-session');
+const config = require('config');
 const moment = require('moment');
-const MongoStore = require('connect-mongodb-session')(session);
-const MongoClient = require('mongodb').MongoClient;
 const numeral = require('numeral');
 const helmet = require('helmet');
+const logger = require('morgan');
 const colors = require('colors');
-const common = require('./lib/common');
-const mongodbUri = require('mongodb-uri');
+let session = require('express-session');
+let RedisStore = require('connect-redis')(session);
+const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
+const MangoUtils = require('./classes/utilities/MangoUtils');
+const RedisUtils = require('./classes/Redis/RedisUtils');
+const IndexingService = require('./classes/services/IndexingService');
 let handlebars = require('express-handlebars');
-
-// Validate our settings schema
-const Ajv = require('ajv');
-const ajv = new Ajv({useDefaults: true});
-
-const baseConfig = ajv.validate(require('./config/baseSchema'), require('./config/settings.json'));
-if(baseConfig === false){
-    console.log(colors.red(`settings.json incorrect: ${ajv.errorsText()}`));
-    process.exit(2);
-}
-
-// get config
-let config = common.getConfig();
-
-// Validate the payment gateway config
-if(config.paymentGateway === 'paypal'){
-    const paypalConfig = ajv.validate(require('./config/paypalSchema'), require('./config/paypal.json'));
-    if(paypalConfig === false){
-        console.log(colors.red(`PayPal config is incorrect: ${ajv.errorsText()}`));
-        process.exit(2);
-    }
-}
-if(config.paymentGateway === 'stripe'){
-    const stripeConfig = ajv.validate(require('./config/stripeSchema'), require('./config/stripe.json'));
-    if(stripeConfig === false){
-        console.log(colors.red(`Stripe config is incorrect: ${ajv.errorsText()}`));
-        process.exit(2);
-    }
-}
-if(config.paymentGateway === 'authorizenet'){
-    const authorizenetConfig = ajv.validate(require('./config/authorizenetSchema'), require('./config/authorizenet.json'));
-    if(authorizenetConfig === false){
-        console.log(colors.red(`Authorizenet config is incorrect: ${ajv.errorsText()}`));
-        process.exit(2);
-    }
-}
-
 // require the routes
 const index = require('./routes/index');
 const admin = require('./routes/admin');
@@ -57,13 +23,7 @@ const product = require('./routes/product');
 const customer = require('./routes/customer');
 const order = require('./routes/order');
 const user = require('./routes/user');
-const paypal = require('./routes/payments/paypal');
-const stripe = require('./routes/payments/stripe');
-const authorizenet = require('./routes/payments/authorizenet');
 
-const app = express();
-
-// view engine setup
 app.set('views', path.join(__dirname, '/views'));
 app.engine('hbs', handlebars({
     extname: 'hbs',
@@ -102,7 +62,7 @@ handlebars = handlebars.create({
             return'';
         },
         getTheme: function(view){
-            return`themes/${config.theme}/${view}`;
+            return`themes/${'Cloth'}/${view}`;
         },
         formatAmount: function(amt){
             if(amt){
@@ -213,13 +173,6 @@ handlebars = handlebars.create({
         }
     }
 });
-
-// session store
-let store = new MongoStore({
-    uri: config.databaseConnectionString,
-    collection: 'sessions'
-});
-
 app.enable('trust proxy');
 app.use(helmet());
 app.set('port', process.env.PORT || 1111);
@@ -227,18 +180,40 @@ app.use(logger('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 app.use(cookieParser('5TOCyfH3HuszKGzFZntk'));
+// session store
+// Not working code
+// RedisUtils.getRedisInstance()
+//     .then((client) => {
+//         let store = new RedisStore({
+//             host: config.get('redis.host'),
+//             port: config.get('redis.port'),
+//             client: client,
+//             ttl: 300
+//         });
+//         app.use(session({
+//             resave: false, // don't save session if unmodified
+//             saveUninitialized: false, // don't create session until something stored
+//             secret: 'pAgGxo8Hzg7PFlv1HpO8Eg0Y6xtP7zYx',
+//             cookie: {
+//                 path: '/',
+//                 httpOnly: true,
+//                 maxAge: 3600000 * 24
+//             },
+//             store: store
+//         }));
+//     });
+
 app.use(session({
-    resave: true,
-    saveUninitialized: true,
+    resave: false, // don't save session if unmodified
+    saveUninitialized: false, // don't create session until something stored
     secret: 'pAgGxo8Hzg7PFlv1HpO8Eg0Y6xtP7zYx',
     cookie: {
         path: '/',
         httpOnly: true,
         maxAge: 3600000 * 24
     },
-    store: store
+    store: new RedisStore()
 }));
-
 // serving static content
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.static(path.join(__dirname, 'views', 'themes')));
@@ -250,13 +225,13 @@ app.use((req, res, next) => {
 });
 
 // update config when modified
-app.use((req, res, next) => {
-    next();
-    if(res.configDirty){
-        config = common.getConfig();
-        app.config = config;
-    }
-});
+// app.use((req, res, next) => {
+//     next();
+//     if(res.configDirty){
+//         config = common.getConfig();
+//         app.config = config;
+//     }
+// });
 
 // Ran on all routes
 app.use((req, res, next) => {
@@ -271,9 +246,6 @@ app.use('/', product);
 app.use('/', order);
 app.use('/', user);
 app.use('/', admin);
-app.use('/paypal', paypal);
-app.use('/stripe', stripe);
-app.use('/authorizenet', authorizenet);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
@@ -322,49 +294,36 @@ app.on('uncaughtException', (err) => {
     process.exit(2);
 });
 
-MongoClient.connect(config.databaseConnectionString, {}, (err, client) => {
-    // On connection error we display then exit
-    if(err){
-        console.log(colors.red('Error connecting to MongoDB: ' + err));
-        process.exit(2);
-    }
-
-    // select DB
-    const dbUriObj = mongodbUri.parse(config.databaseConnectionString);
-    let db;
-    // if in testing, set the testing DB
-    if(process.env.NODE_ENV === 'test'){
-        db = client.db('testingdb');
-    }else{
-        db = client.db(dbUriObj.database);
-    }
-
-    // setup the collections
-    db.users = db.collection('users');
-    db.products = db.collection('products');
-    db.orders = db.collection('orders');
-    db.pages = db.collection('pages');
-    db.menu = db.collection('menu');
-    db.customers = db.collection('customers');
-
-    // add db to app for routes
-    app.dbClient = client;
-    app.db = db;
-    app.config = config;
-    app.port = app.get('port');
-
-    // run indexing
-    common.runIndexing(app)
-    .then(app.listen(app.get('port')))
-    .then(() => {
-        // lift the app
-        app.emit('appStarted');
-        console.log(colors.green('expressCart running on host: http://localhost:' + app.get('port')));
+MangoUtils.getMangoDbInstance()
+    .then((dbInstance) => {
+        dbInstance.users = dbInstance.collection('users');
+        dbInstance.products = dbInstance.collection('products');
+        dbInstance.orders = dbInstance.collection('orders');
+        dbInstance.pages = dbInstance.collection('pages');
+        dbInstance.customers = dbInstance.collection('customers');
+        return dbInstance;
+    })
+    .then((dbInstance) => {
+        return RedisUtils.getRedisInstance();
+    })
+    .then((redisInstance) => {
+        IndexingService.runIndexing()
+            .then((productIndex) => {
+                app.productIndex = productIndex;
+            })
+            .then(app.listen(app.get('port')))
+            .then(() => {
+                app.emit('appStarted');
+                console.log(colors.green('expressCart running on host: http://localhost:' + app.get('port')));
+            })
+            .catch((err) => {
+                console.error(colors.red('Error setting up indexes:' + err));
+                process.exit(2);
+            });
     })
     .catch((err) => {
         console.error(colors.red('Error setting up indexes:' + err));
         process.exit(2);
     });
-});
 
 module.exports = app;

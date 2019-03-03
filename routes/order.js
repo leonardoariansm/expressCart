@@ -1,27 +1,32 @@
 const express = require('express');
 const common = require('../lib/common');
 const router = express.Router();
+const OrderServices = require('../classes/services/OrderServices');
 
 // Show orders
-router.get('/admin/orders', common.restrict, (req, res, next) => {
-    const db = req.app.db;
-
-    // Top 10 products
-    db.orders.find({}).sort({'orderDate': -1}).limit(10).toArray((err, orders) => {
-        if(err){
-            console.info(err.stack);
-        }
+router.get('/admin/orders', common.restrict, async (req, res, next) => {
+    try{
+        let latestOrders = await OrderServices.getLatestOrders();
         res.render('orders', {
             title: 'Cart',
-            orders: orders,
+            orders: latestOrders,
             admin: true,
-            config: req.app.config,
             session: req.session,
             message: common.clearSessionValue(req.session, 'message'),
             messageType: common.clearSessionValue(req.session, 'messageType'),
             helpers: req.handlebars.helpers
         });
-    });
+    }catch(err){
+        res.render('orders', {
+            title: 'Cart',
+            orders: [],
+            admin: true,
+            session: req.session,
+            message: common.clearSessionValue(req.session, 'message'),
+            messageType: common.clearSessionValue(req.session, 'messageType'),
+            helpers: req.handlebars.helpers
+        });
+    }
 });
 
 // Admin section
