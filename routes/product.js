@@ -1,72 +1,79 @@
 const express = require('express');
 const common = require('../lib/common');
+const Promise = require('bluebird');
 const colors = require('colors');
 const rimraf = require('rimraf');
 const fs = require('fs');
 const path = require('path');
 const router = express.Router();
-const ProductService = require('../classes/services/ProductService');
-const ProductRequestProcessor = require('../classes/RequestProcessor/ProductRequestProcessor');
+const StaticFunctions = require('../classes/utilities/staticFunctions');
+const{ProductService} = require('../classes/services/ProductService');
+const{ProductRequestProcessor} = require('../classes/RequestProcessor/ProductRequestProcessor');
 const Enums = require('../classes/models/Enums');
-const UrlServices = require('../classes/services/UrlService');
+const ProductUrls = require('../classes/UrlService/ProductUrls');
+const{ProductIndexingService} = require('../classes/services/Indexing/ProductIndexingService');
+const{AdminServices} = require('../classes/services/AdminServices');
 
 router.get('/admin/products', common.restrict, async (req, res, next) => {
     // undone
     try{
-        let topProducts = await ProductService.getLatestAddedProduct();
+        let topProducts = await ProductService.getLatestAddedProduct(req, res);
         res.render('products', {
             title: 'Cart',
             top_results: topProducts,
             admin: true,
+            route: 'admin',
             session: req.session,
             message: common.clearSessionValue(req.session, 'message'),
             messageType: common.clearSessionValue(req.session, 'messageType'),
-            helpers: req.handlebars.helpers
+            helpers: req.handlebars.helpers,
+            config: req.app.config
         });
     }catch(err){
         res.render('products', {
             title: 'Cart',
             top_results: {},
             admin: true,
+            route: 'admin',
             session: req.session,
             message: common.clearSessionValue(req.session, 'message'),
             messageType: common.clearSessionValue(req.session, 'messageType'),
-            helpers: req.handlebars.helpers
+            helpers: req.handlebars.helpers,
+            config: req.app.config
         });
     }
 });
 
-router.get('/admin/products/filter/:search', (req, res, next) => {
-    const db = req.app.db;
+router.get('/admin/products/filter/:search', async (req, res, next) => {
     let searchTerm = req.params.search;
-    let productsIndex = req.app.productsIndex;
-
-    let lunrIdArray = [];
-    productsIndex.search(searchTerm).forEach((id) => {
-        lunrIdArray.push(common.getId(id.ref));
-    });
-
-    // we search on the lunr indexes
-    db.products.find({_id: {$in: lunrIdArray}}).toArray((err, results) => {
-        if(err){
-            console.error(colors.red('Error searching', err));
-        }
-        res.render('products', {
-            title: 'Results',
-            results: results,
-            admin: true,
-            config: req.app.config,
-            session: req.session,
-            searchTerm: searchTerm,
-            message: common.clearSessionValue(req.session, 'message'),
-            messageType: common.clearSessionValue(req.session, 'messageType'),
-            helpers: req.handlebars.helpers
-        });
+    let products = [];
+    let menu = {};
+    try{
+        let result = await Promise.all([
+            ProductIndexingService.getFilteredProductByCriteria(searchTerm),
+            AdminServices.getMenu(req, res)
+        ]);
+        products = result[0];
+        menu = await common.sortMenu(result[1]);
+    }catch(e){
+        console.error('Error in product filtering: ' + e);
+    }
+    res.render('products', {
+        title: 'Results',
+        results: products,
+        admin: true,
+        config: req.app.config,
+        session: req.session,
+        searchTerm: searchTerm,
+        message: common.clearSessionValue(req.session, 'message'),
+        messageType: common.clearSessionValue(req.session, 'messageType'),
+        helpers: req.handlebars.helpers,
+        menu: menu
     });
 });
 
 // insert form
-router.get('/admin/product/new', common.restrict, common.checkAccess, (req, res) => {
+router.get('/admin/product/new', common.restrict, (req, res) => {
     res.render('product_new', {
         title: 'New product',
         session: req.session,
@@ -75,40 +82,39 @@ router.get('/admin/product/new', common.restrict, common.checkAccess, (req, res)
         messageType: common.clearSessionValue(req.session, 'messageType'),
         editor: true,
         admin: true,
-        helpers: req.handlebars.helpers
+        helpers: req.handlebars.helpers,
+        config: req.app.config
     });
 });
 
 // insert new product form action
-router.post('/admin/product/insert', common.restrict, common.checkAccess, async (req, res) => {
+router.post('/admin/product/insert', common.restrict, async (req, res) => {
     try{
-        let{isProductExist, product, newProductId} = await ProductService.insertProduct(req, res);
+        let product = await ProductService.insertProduct(req, res);
         req.session.product = product;
-        if(isProductExist){
-            req.session.message = 'Permalink already exists. Pick a new one.';
-            req.session.messageType = 'danger';
-            // redirect to insert
-            res.redirect('/admin/insert');
-        }
-        req.session.message = 'New product successfully created';
-        req.session.messageType = 'success';
-
-        // redirect to new doc
-        res.redirect('/admin/product/edit/' + newProductId);
+        req.session.message = Enums.PRODUCT_SUCCESSFULLY_INSERTED;
+        req.session.messageType = Enums.SUCCESS;
+        res.redirect(ProductUrls.getUrlToEditProduct(product.productId));
     }catch(err){
-        console.log(colors.red('Error inserting document: ' + err));
-
-        // keep the current stuff
-        req.session.message = 'Error: Inserting product';
-        req.session.messageType = 'danger';
+        switch(err.message){
+            case Enums.INVALID_PRODUCT_DETAILS:
+                req.session.message = Enums.INVALID_PRODUCT_DETAILS;
+                break;
+            case Enums.PRODUCT_PERMALINK_ALREADY_EXIST:
+                req.session.message = Enums.PRODUCT_PERMALINK_ALREADY_EXIST;
+                break;
+            default:
+                req.session.message = Enums.UNHANDLED_EXCEPTION;
+        }
+        req.session.messageType = Enums.DANGER;
         req.session.product = ProductRequestProcessor.getRawRequestProduct(req, res);
         // redirect to insert
-        res.redirect('/admin/product/new');
+        res.redirect(ProductUrls.getUrlToAddNewProduct());
     }
 });
 
 // render the editor
-router.get('/admin/product/edit/:id', common.restrict, common.checkAccess, (req, res) => {
+router.get('/admin/product/edit/:id', common.restrict, (req, res) => {
     common.getImages(req.params.id, req, res, (images, product) => {
         let options = {};
         req.session.product = product;
@@ -125,27 +131,32 @@ router.get('/admin/product/edit/:id', common.restrict, common.checkAccess, (req,
             message: common.clearSessionValue(req.session, 'message'),
             messageType: common.clearSessionValue(req.session, 'messageType'),
             editor: true,
-            helpers: req.handlebars.helpers
+            helpers: req.handlebars.helpers,
+            config: req.app.config
         });
     });
 });
 
 // Update an existing product form action
-router.post('/admin/product/update', common.restrict, common.checkAccess, async (req, res) => {
+router.post('/admin/product/update', common.restrict, async (req, res) => {
     try{
-        let product = await ProductService.updateProduct(req, res);
-        let redirectUrl = UrlServices.getUrlToEditProduct(product.productId);
+        let productId = req.body.frmProductId;
+        let product = await ProductService.updateProduct(req, res, productId);
+        let redirectUrl = ProductUrls.getUrlToEditProduct(product.productId);
         req.session.message = Enums.PRODUCT_SUCCESSFULLY_SAVED;
         req.session.messageType = Enums.SUCCESS;
-        req.session.product = product;
+        req.session.product = common.clearSessionValue(req.session, 'product');
         res.redirect(redirectUrl);
     }catch(err){
-        let redirectUrl = UrlServices.getUrlToEditProduct(req.session.productId);
+        let redirectUrl = ProductUrls.getUrlToEditProduct(req.session.productId);
         switch(err.message){
-            case Enums.PRODUCT_NOT_IN_REDIS:
+            case Enums.INVALID_PRODUCT_DETAILS:
+                req.session.message = Enums.INVALID_PRODUCT_DETAILS;
+                break;
+            case Enums.PRODUCT_NOT_EXISTS:
                 req.session.message = Enums.PRODUCT_ID_INVALID;
                 req.session.product = common.clearSessionValue(req.session, 'product');
-                redirectUrl = UrlServices.getUrlToAddNewProduct();
+                redirectUrl = ProductUrls.getUrlToAddNewProduct();
                 break;
             case Enums.PRODUCT_PERMALINK_ALREADY_EXIST:
                 req.session.message = Enums.PRODUCT_PERMALINK_ALREADY_EXIST_MESSAGE;
@@ -160,82 +171,92 @@ router.post('/admin/product/update', common.restrict, common.checkAccess, async 
 });
 
 // delete product
-router.get('/admin/product/delete/:id', common.restrict, common.checkAccess, ProductService.validateProductId, async (req, res) => {
+router.get('/admin/product/delete/:id', common.restrict, async (req, res) => {
     try{
         // image deleting logic not written
-        await ProductService.deleteProduct(req, res);
+        let productId = req.params.id;
+        await ProductService.deleteProduct(productId);
         req.session.message = Enums.PRODUCT_SUCCESSFULLY_DELETED;
         req.session.messageType = Enums.SUCCESS;
         common.clearSessionValue(req.session, 'product');
-        res.redirect(UrlServices.getUrlToAllProducts());
+        res.redirect(ProductUrls.getUrlToAllProducts());
     }catch(err){
         req.session.message = Enums.ERROR_PRODUCT_DELETION;
         req.session.messageType = Enums.DANGER;
-        res.redirect(UrlServices.getUrlToAllProducts());
+        res.redirect(ProductUrls.getUrlToAllProducts());
         throw err;
     }
 });
 
 // update the published state based on an ajax call from the frontend
-router.post('/admin/product/published_state', common.restrict, common.checkAccess, (req, res) => {
-    const db = req.app.db;
-
-    db.products.update({_id: common.getId(req.body.id)}, {$set: {productPublished: req.body.state}}, {multi: false}, (err, numReplaced) => {
-        if(err){
-            console.error(colors.red('Failed to update the published state: ' + err));
-            res.status(400).json('Published state not updated');
-        }else{
-            res.status(200).json('Published state updated');
-        }
-    });
-});
-
-// set as main product image
-router.post('/admin/product/setasmainimage', common.restrict, common.checkAccess, async (req, res) => {
+router.post('/admin/product/published_state', common.restrict, async (req, res) => {
     try{
-        // image saving logic not present
-        await ProductService.updateProduct(req, res);
-        res.status(200).json({message: 'Main image successfully set'});
-    }catch(err){
-        res.status(400).json({message: 'Unable to set as main image. Please try again.'});
+        await ProductService.updateProductPublishedState(req.body.id, req.body.state);
+        req.session.messageType = 'success';
+        req.session.message = 'Product Published State Updated';
+        res.status(200).json('Published state updated');
+    }catch(e){
+        console.error(colors.red('Failed to update the published state: ' + e));
+        req.session.messageType = 'danger';
+        req.session.message = 'Failed to update the published state';
+        res.status(200).json('Published state not updated');
     }
 });
 
-// deletes a product image
-router.post('/admin/product/deleteimage', common.restrict, common.checkAccess, (req, res) => {
-    const db = req.app.db;
+// set as main product image
+// router.post('/admin/product/setasmainimage', common.restrict, common.checkAccess, async (req, res) => {
+//     try{
+//         // image saving logic not present
+//         let productId = req.session.product && req.session.product.productId;
+//         if(StaticFunctions.isEmpty(productId)){ throw Error(Enums.PRODUCT_ID_INVALID); }
+//         await ProductService.updateProduct(req, res, productId);
+//         res.status(200).json({message: 'Main image successfully set'});
+//     }catch(err){
+//         switch(err.message){
+//             case Enums.PRODUCT_ID_INVALID:
+//                 res.redirect(ProductUrls.getUrlToAddNewProduct());
+//                 break;
+//             default:
+//                 res.status(400).json({message: 'Unable to set as main image. Please try again.'});
+//         }
+//     }
+// });
 
-    // get the productImage from the db
-    db.products.findOne({_id: common.getId(req.body.product_id)}, (err, product) => {
-        if(err){
-            console.info(err.stack);
-        }
-        if(req.body.productImage === product.productImage){
-            // set the produt_image to null
-            db.products.update({_id: common.getId(req.body.product_id)}, {$set: {productImage: null}}, {multi: false}, (err, numReplaced) => {
-                if(err){
-                    console.info(err.stack);
-                }
-                // remove the image from disk
-                fs.unlink(path.join('public', req.body.productImage), (err) => {
-                    if(err){
-                        res.status(400).json({message: 'Image not removed, please try again.'});
-                    }else{
-                        res.status(200).json({message: 'Image successfully deleted'});
-                    }
-                });
-            });
-        }else{
-            // remove the image from disk
-            fs.unlink(path.join('public', req.body.productImage), (err) => {
-                if(err){
-                    res.status(400).json({message: 'Image not removed, please try again.'});
-                }else{
-                    res.status(200).json({message: 'Image successfully deleted'});
-                }
-            });
-        }
-    });
-});
+// deletes a product image
+// router.post('/admin/product/deleteimage', common.restrict, common.checkAccess, (req, res) => {
+//     const db = req.app.db;
+//
+//     // get the productImage from the db
+//     db.products.findOne({_id: common.getId(req.body.product_id)}, (err, product) => {
+//         if(err){
+//             console.info(err.stack);
+//         }
+//         if(req.body.productImage === product.productImage){
+//             // set the produt_image to null
+//             db.products.update({_id: common.getId(req.body.product_id)}, {$set: {productImage: null}}, {multi: false}, (err, numReplaced) => {
+//                 if(err){
+//                     console.info(err.stack);
+//                 }
+//                 // remove the image from disk
+//                 fs.unlink(path.join('public', req.body.productImage), (err) => {
+//                     if(err){
+//                         res.status(400).json({message: 'Image not removed, please try again.'});
+//                     }else{
+//                         res.status(200).json({message: 'Image successfully deleted'});
+//                     }
+//                 });
+//             });
+//         }else{
+//             // remove the image from disk
+//             fs.unlink(path.join('public', req.body.productImage), (err) => {
+//                 if(err){
+//                     res.status(400).json({message: 'Image not removed, please try again.'});
+//                 }else{
+//                     res.status(200).json({message: 'Image successfully deleted'});
+//                 }
+//             });
+//         }
+//     });
+// });
 
 module.exports = router;

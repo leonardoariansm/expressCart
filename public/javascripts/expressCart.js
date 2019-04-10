@@ -381,29 +381,79 @@ $(document).ready(function (){
                 method: 'POST',
                 url: '/customer/login_action',
                 data: {
-                    loginEmail: $('#customerLoginEmail').val(),
-                    loginPassword: $('#customerLoginPassword').val()
+                    loginEmail: ($('#customerLoginEmail').val() !== undefined) ? $('#customerLoginEmail').val() : $('#email').val(),
+                    loginPassword: ($('#customerLoginPassword').val() !== undefined) ? $('#customerLoginPassword').val() : $('#password').val()
                 }
             })
             .done(function(msg){
-                var customer = msg.customer;
-                // Fill in customer form
-                $('#shipEmail').val(customer.email);
-                $('#shipFirstname').val(customer.firstName);
-                $('#shipLastname').val(customer.lastName);
-                $('#shipAddr1').val(customer.address1);
-                $('#shipAddr2').val(customer.address2);
-                $('#shipCountry').val(customer.country);
-                $('#shipState').val(customer.state);
-                $('#shipPostcode').val(customer.postcode);
-                $('#shipPhoneNumber').val(customer.phone);
-                location.reload();
+                window.location.href = '/checkout';
+                // var customer = msg.customer;
+                // // Fill in customer form
+                // $('#shipEmail').val(customer.email);
+                // $('#shipFirstname').val(customer.firstName);
+                // $('#shipLastname').val(customer.lastName);
+                // $('#shipAddr1').val(customer.address1);
+                // $('#shipAddr2').val(customer.address2);
+                // $('#shipCountry').val(customer.country);
+                // $('#shipState').val(customer.state);
+                // $('#shipPostcode').val(customer.postcode);
+                // $('#shipPhoneNumber').val(customer.phone);
+                // location.reload();
             })
             .fail(function(msg){
                 showNotification(msg.responseJSON.message, 'danger');
             });
         }
         e.preventDefault();
+    });
+
+    // call update settings API
+    $('#customerForgotPasword').on('click', function(e){
+        if(!e.isDefaultPrevented()){
+            e.preventDefault();
+            window.location.href = '/customer/forgotten';
+            // $.ajax({
+            //     method: 'POST',
+            //     url: '/customer/forgotten_action',
+            //     data: {
+            //         loginEmail: ($('#customerLoginEmail').val() !== undefined) ? $('#customerLoginEmail').val() : $('#email').val()
+            //     }
+            // })
+            //     .done(function(msg){
+            //         $('html').html(msg);
+            //         showNotification(msg.message, 'success', true);
+            //     })
+            //     .fail(function(msg){
+            //         showNotification(msg.responseJSON.message, 'danger');
+            //     });
+        }
+        e.preventDefault();
+    });
+
+    $('#customerSignUp').on('click', function(e){
+        if(!e.isDefaultPrevented()){
+            e.preventDefault();
+            $.ajax({
+                method: 'POST',
+                url: '/customer/create',
+                data: {
+                    email: $('#email').val(),
+                    firstName: $('#firstName').val(),
+                    lastName: $('#lastName').val(),
+                    address1: $('#address1').val(),
+                    address2: $('#address2').val(),
+                    country: $('#country').val(),
+                    state: $('#state').val(),
+                    postcode: $('#postcode').val(),
+                    phone: $('#phoneNumber').val(),
+                    password: $('#password').val()
+                }
+            }).done(function (msg){
+                window.location.href = '/customer/login';
+            }).fail(function (msg){
+                window.location.href = '/';
+            });
+        }
     });
 
     $(document).on('click', '.image-next', function(e){

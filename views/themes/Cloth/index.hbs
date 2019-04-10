@@ -34,7 +34,7 @@
                             </a>
                         </div>
                     {{else}}
-                        <a href="/product/{{this._id}}">
+                        <a href="/product/{{this.productId}}">
                             <div class="vertical-center thumbnail-image-container">
                                 {{#if productImage}}
                                     <img class="img-responsive" src="{{this.productImage}}" alt="...">
@@ -51,7 +51,7 @@
                         {{currencySymbol ../config.currencySymbol}}{{formatAmount productPrice}}
                     </h3>
                     <p class="text-center">
-                        <a class="btn btn-primary add-to-cart" data-id="{{this._id}}" data-link="{{this.productPermalink}}" data-has-options="{{checkProductOptions this.productOptions}}" role="button">Add to cart</a>
+                        <!--<a class="btn btn-primary add-to-cart" data-id="{{this.productId}}" data-link="{{this.productPermalink}}" data-has-options="{{checkProductOptions this.productOptions}}" role="button">Add to cart</a>-->
                     </p>
                 </div>
             </div>

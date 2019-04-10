@@ -47,10 +47,10 @@
                         {{/unless}}
                     </form>
                     {{#if session.customer}}
-                    {{#ifCond config.paymentGateway '==' 'stripe'}}
+                    {{#ifCond paymentGateway '==' 'stripe'}}
                         {{> partials/payments/stripe}}
                     {{/ifCond}}
-                    {{#ifCond config.paymentGateway '==' 'authorizenet'}}
+                    {{#ifCond paymentGateway '==' 'authorizenet'}}
                         {{> partials/payments/authorizenet}}
                     {{/ifCond}}
                     {{/if}}

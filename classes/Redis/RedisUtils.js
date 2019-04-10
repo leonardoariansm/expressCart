@@ -57,7 +57,7 @@ class RedisUtils{
                         resolve(result);
                     })
                     .catch((err) => {
-                        console.error(colors.red('Error in setting mulitple Values in hash'));
+                        console.error(colors.red('Error in setting multiple Values in hash'));
                         reject(err);
                     });
             });
@@ -112,37 +112,6 @@ class RedisUtils{
         });
     }
 
-    static getKeyCount(key, multi){
-        let that = this;
-        if(typeof multi === 'undefined' || multi === null){
-            return new promise((resolve, reject) => {
-                client.get(key)
-                    .then((value) => {
-                        if(StaticFunctions.isNotEmpty(value) && value !== 'none'){
-                            resolve(+value);
-                        }
-                        return resolve(0);
-                    })
-                    .catch((err) => {
-                        console.error(colors.red('Error in setting value in redisClient'));
-                        reject(err);
-                    });
-            });
-        }
-        return multi.get(key);
-    }
-
-    static setKeyCount(key, count, multi){
-        let that = this;
-        if(typeof multi === 'undefined' || multi == null){
-            return client.set(key, count)
-                .catch((err) => {
-                    console.error(colors.red('Error in setting value in redisClient'));
-                });
-        }
-        return multi.set(key, count);
-    }
-
     static setValueInHash(key, hashKey, value, multi){
         let that = this;
         if(typeof multi === 'undefined' || multi === null){
@@ -179,7 +148,7 @@ class RedisUtils{
                     console.error(colors.red('Error in increment' + err));
                 });
         }
-        return client.incr(key);
+        return multi.incr(key);
     }
 
     static getValueFromHash(keyName, hashKey, multi){
@@ -197,7 +166,22 @@ class RedisUtils{
         return multi.hget(keyName, hashKey);
     }
 
-    static setValueInSortedSet(key, value, score, multi){
+    static getSortedSetScoreByMember(key, member, multi){
+        if(typeof multi === 'undefined' || multi === null){
+            return new promise((resolve, reject) => {
+                client.zscore(key, member)
+                    .then((value) => {
+                        resolve(value);
+                    })
+                    .catch((err) => {
+                        reject(err);
+                    });
+            });
+        }
+        return multi.zscore(key, member);
+    }
+
+    static setValueInSortedSet(key, score, value, multi){
         if(typeof multi === 'undefined' || multi === null){
             return new promise((resolve, reject) => {
                client.zadd(key, score, value)
@@ -212,22 +196,16 @@ class RedisUtils{
         return multi.zadd(key, score, value);
     }
 
-    static setMultipleValuesInSortedSet(key, valueWithScores, multi){
+    static setMultipleValuesInSortedSet(setkey, valueWithScores, multi){
         let that = this;
-        multi = (typeof multi === 'undefined' || multi === null) ? that.queueSuccessiveCommands() : multi;
+        let newMulti = (typeof multi === 'undefined' || multi === null) ? that.queueSuccessiveCommands() : multi;
         for(let key in valueWithScores){
             let valueWithScore = valueWithScores[key];
-            that.setValueInSortedSet(key, valueWithScore.value, valueWithScores.score, multi);
+            that.setValueInSortedSet(setkey, valueWithScore.score, valueWithScore.value, newMulti);
         }
-        return new promise((resolve, reject) => {
-            that.executeQueuedCommands(multi)
-                .then((result) => {
-                    resolve(result);
-                })
-                .catch((err) => {
-                    reject(err);
-                });
-        });
+        if((typeof multi === 'undefined' || multi === null)){
+            that.executeQueuedCommands(newMulti);
+        }
     }
 
     static createArgsForSortedSetRangeByScore(key, maxScore, minScore, limit){
@@ -262,6 +240,62 @@ class RedisUtils{
             });
         }
         return multi.zrangebyscore(allArgs);
+    }
+
+    static getSortedSetRangeByScoreReverse(key, maxScore, minScore, limit, multi){
+        let that = this;
+        if(!minScore || minScore == null){ minScore = '-inf'; }
+
+        if(!maxScore || maxScore == null){ maxScore = '+inf'; }
+
+        let allArgs = [key, maxScore, minScore];
+        if(limit && limit.length >= 2){
+            allArgs.push('limit');
+            allArgs.push(limit[0]);
+            allArgs.push(limit[1]);
+        }
+        if(typeof multi === 'undefined' || multi === null){
+            return new promise((resolve, reject) => {
+                client.zrevrangebyscore(allArgs)
+                    .then((result) => {
+                        resolve(result);
+                    })
+                    .catch((err) => {
+                        reject(err);
+                    });
+            });
+        }
+        return multi.zrevrangebyscore(allArgs);
+    }
+
+    static getSortedSetRangeScoreByScoreReverse(key, maxScore, minScore, limit, multi){
+        let that = this;
+        let allArgs = this.createArgsForSortedSetRangeByScore(key, maxScore, minScore, limit);
+        [allArgs[1], allArgs[2]] = [allArgs[2], allArgs[1]];
+        allArgs.push('WITHSCORES');
+        if(typeof multi === 'undefined' || multi === null){
+            return new promise((resolve, reject) => {
+                client.zrevrangebyscore(allArgs)
+                    .then((result) => {
+                        resolve(result);
+                    })
+                    .catch((err) => {
+                        reject(err);
+                    });
+            });
+        }
+        return multi.zrevrangebyscore(allArgs);
+    }
+
+    static removeToSortedSet(key, member, multi){
+        let that = this;
+        if(typeof multi === 'undefined' || multi === null){
+            return client.zrem(key, member)
+                .catch((err) => {
+                    console.log(colors.red(err.stack));
+                });
+        }
+        return multi.zrem(key, member);
     }
 
     static addToSet(key, values, multi){
@@ -316,6 +350,22 @@ class RedisUtils{
         return multi.smembers(key);
     }
 
+    static getAllSortedSetMembers(key, minscore, maxscore, multi){
+        let that = this;
+        if(typeof multi === 'undefined' || multi === null){
+            return new promise((resolve, reject) => {
+                client.zrange(key, minscore, maxscore)
+                    .then((members) => {
+                        resolve(members);
+                    })
+                    .catch((err) => {
+                        reject(err);
+                    });
+            });
+        }
+        return multi.zrange(key, minscore, maxscore);
+    }
+
     static removeToSet(key, member, multi){
         let that = this;
         if(typeof multi === 'undefined' || multi === null){
@@ -327,15 +377,73 @@ class RedisUtils{
         return multi.srem(key);
     }
 
-    static set(key, value, multi){
+    static setUnionAndStore(toStoreKeyName, keys, multi){
         let that = this;
         if(typeof multi === 'undefined' || multi === null){
-            return client.set(key, value)
+            return client.sunionstore(toStoreKeyName, keys)
                 .catch((err) => {
                     console.log(colors.red(err.stack));
                 });
         }
-        return multi.set(key);
+        return multi.sunionstore(toStoreKeyName, keys);
+    }
+
+    static setInterAndStore(toStoreKeyName, keys, multi){
+        let that = this;
+        if(typeof multi === 'undefined' || multi === null){
+            return client.sinterstore(toStoreKeyName, keys)
+                .catch((err) => {
+                    console.log(colors.red(err.stack));
+                });
+        }
+        return multi.sinterstore(toStoreKeyName, keys);
+    }
+
+    static setInter(keys, multi){
+        let that = this;
+        if(typeof multi === 'undefined' || multi === null){
+            return client.sinter(keys)
+                .catch((err) => {
+                    console.log(colors.red(err.stack));
+                });
+        }
+        return multi.sinter(keys);
+    }
+
+    static setDifferenceAndStore(toStoreKeyName, keys, multi){
+        let that = this;
+        if(typeof multi === 'undefined' || multi === null){
+            return client.sdiffstore(toStoreKeyName, keys)
+                .catch((err) => {
+                    console.log(colors.red(err.stack));
+                });
+        }
+        return multi.sdiffstore(toStoreKeyName, keys);
+    }
+
+    static getSetSize(key, multi){
+        let that = this;
+        if(typeof multi === 'undefined' || multi === null){
+            return new promise((resolve, reject) => {
+                client.scard(key)
+                    .then((size) => {
+                        resolve(size);
+                    })
+                    .catch((err) => {
+                        reject(err);
+                    });
+            });
+        }
+        return multi.scard(key);
+    }
+
+    static set (key, value, expiryTime, multi){
+        let that = this;
+        if(typeof multi === 'undefined' || multi === null){
+            return expiryTime === null || expiryTime === undefined || expiryTime === -1 ? client.set(key, value) : client.setex(key, expiryTime, value);
+        }
+
+        return expiryTime === -1 ? multi.set(key, value) : multi.setex(key, expiryTime, value);
     }
 
     static get(key, multi){
@@ -365,6 +473,19 @@ class RedisUtils{
             });
         }
         return multi.del(key);
+    }
+
+    static expireKey(key, expiryTime, multi){
+        let that = this;
+        if(typeof multi === 'undefined' || multi === null){
+            return new promise((resolve, reject) => {
+                client.ttl(key, expiryTime)
+                    .catch((err) => {
+                        console.log(colors.red(err.stack));
+                    });
+            });
+        }
+        return multi.ttl(key, expiryTime);
     }
 }
 

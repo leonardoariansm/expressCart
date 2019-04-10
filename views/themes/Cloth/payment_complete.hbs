@@ -8,10 +8,10 @@
             {{/ifCond}}
             {{#if result}}
                 <div>
-                    <p><strong>Order ID:</strong> {{result._id}}</p>
+                    <p><strong>Order ID:</strong> {{result.orderId}}</p>
                     <p><strong>Payment ID:</strong> {{result.orderPaymentId}}</p>
                 </div>
-            {{/if}} 
+            {{/if}}
             {{#ifCond result.orderStatus '==' 'Paid'}}
                 <h3 class="text-warning">Please retain the details above as a reference of payment.</h3>
             {{/ifCond}}

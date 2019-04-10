@@ -9,26 +9,128 @@
       "databaseConnectionString": "mongodb://127.0.0.1:27017/expresscart"
   },
   "products" : {
+    "productsPerRow": 3,
     "productsPerPage": 6,
     "protocol": "http",
     "host": "localhost",
     "port": "1111",
+    "productImageUploadDir": "public/uploads/",
     "paths": {
       "addNewProduct": "admin/product/new",
       "editProduct": "admin/product/edit",
       "allProduct": "admin/products"
+    },
+    "indexingWords": 5
+  },
+  "users": {
+    "protocol": "http",
+    "host": "localhost",
+    "port": "1111",
+    "paths": {
+      "addNewUser": "admin/user/new",
+      "editUser": "admin/user/edit",
+      "allUser": "admin/users",
+      "deleteUrl": "admin/user/delete"
+    }
+  },
+  "admins": {
+    "protocol": "http",
+    "host": "localhost",
+    "port": "1111",
+    "paths": {
+      "login": "admin/login",
+      "setup": "admin/setup"
     }
   },
   "orders": {
     "topNOrderCount": 10,
-    "initialScore": 11111
+    "initialScore": 11111,
+    "expiryTime":604800,
+    "validOrderStatus": [
+      "first", "second"]
   },
   "customers": {
-    "topNCustomers": 10
+    "topNCustomers": 10,
+    "tokenExpiryTime": 900
   },
   "redis": {
       "host": "127.0.0.1",
       "port": 6379,
       "MAX_RETRY_REDIS": 5
+  },
+  "themeViews": "themes/Cloth",
+  "cartTitle": "Apna Bazaar",
+  "theme": "Sabse sasta sabse accha",
+  "trackStock": false,
+
+  "payment" : {
+    "paypal": {
+      "mode": "sandbox",
+      "client_id": "this_is_not_real",
+      "client_secret": "this_is_not_real",
+      "paypalCartDescription": "BKLYN",
+      "paypalCurrency": "USD"
+    },
+    "stripe": {
+      "secretKey": "sk_test_iqnxsA9LygmyIe9JakK0H0oT00Spbz3oDf",
+      "publicKey": "pk_test_mSalRvqxu85AzKPXb9sWBvLz00z8etNzoE",
+      "stripeCurrency": "inr",
+      "stripeDescription": "Apna Bazaar payment",
+      "stripeLogoURL": "http://localhost:1111/images/stripelogo.png"
+    },
+    "authorizenet": {
+      "loginId": "loginId",
+      "transactionKey": "transactionKey",
+      "clientKey": "clientKey",
+      "mode": "test"
+    },
+    "currencySymbol": "₹",
+    "paymentGateway": "stripe"
+  },
+
+  "menu": {
+    "items": [
+      {
+        "title": "Backpacks",
+        "link": "backpack",
+        "order": 0
+      },
+      {
+        "title": "Boots",
+        "link": "boots",
+        "order": 1
+      }
+    ],
+    "menuEnabled": true,
+    "menuTitle": "Menu",
+    "menuLocation": "side"
+  },
+  "settings": {
+    "themeViews": "themes/Cloth",
+    "cartTitle": "Apna Bazaar",
+    "cartDescription": "Sabse sasta sabse accha",
+    "cartLogo": "",
+    "baseUrl": "http://localhost:1111",
+    "emailHost": "smtp-mail.outlook.com",
+    "emailPort": 587,
+    "emailSecure": false,
+    "emailUser": "trishabh1997@gmail.com  ",
+    "emailPassword": "@abcd1234#",
+    "emailAddress": "ris941420@gmail.com",
+    "flatShipping": 10,
+    "freeShippingAmount": 100,
+    "footerHtml": "<h4 class=\"text-center\">Powered by ApnaBaazar</h4>",
+    "googleAnalytics": "",
+    "customCss": ".footer{padding-top: 5px;}",
+    "theme": "Cloth",
+    "trackStock": false,
+    "menuEnabled": true,
+    "productsPerRow": 3,
+    "productsPerPage": 6,
+    "menuTitle": "Menu",
+    "menuLocation": "side",
+    "currencySymbol": "₹",
+    "paymentGateway": "stripe",
+    "databaseConnectionString": "mongodb://127.0.0.1:27017/expresscart"
   }
 }

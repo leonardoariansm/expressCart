@@ -1,6 +1,6 @@
 const config = require('config');
 
-class UrlService{
+class ProductUrls{
     static getProductUrl(){
         let protocol = config.get('products.protocol');
         let host = config.get('products.host');
@@ -16,16 +16,16 @@ class UrlService{
     }
 
     static getUrlToAddNewProduct(){
-        return UrlService.getProductUrl() + '/' + config.get('products.paths.addNewProduct');
+        return ProductUrls.getProductUrl() + '/' + config.get('products.paths.addNewProduct');
     }
 
     static getUrlToEditProduct(productId){
-        return UrlService.getProductUrl() + '/' + config.get('products.paths.editProduct') + '/' + productId.toString();
+        return ProductUrls.getProductUrl() + '/' + config.get('products.paths.editProduct') + '/' + productId.toString();
     }
 
     static getUrlToAllProducts(){
-        return UrlService.getProductUrl() + '/' + config.get('products.path.allProduct');
+        return ProductUrls.getProductUrl() + '/' + config.get('products.paths.allProduct');
     }
 }
 
-module.exports = UrlService;
+module.exports = ProductUrls;

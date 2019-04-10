@@ -1,15 +1,23 @@
 const colors = require('colors');
 const promise = require('bluebird');
-const RedisUtils = require('../Redis/RedisUtils');
-const RedisKeys = require('../Redis/RedisKeys');
-const ProductServices = require('../services/ProductService');
-const UserServices = require('../services/UserServices');
-const OrderServices = require('../services/OrderServices');
-const PageServices = require('../services/PageServices');
-const CustomerServices = require('../services/CustomerService');
-const StaticFunctions = require('../utilities/staticFunctions');
+const RedisUtils = require('../../Redis/RedisUtils');
+const RedisKeys = require('../../Redis/RedisKeys');
+const MangoUtils = require('../../utilities/MangoUtils');
+// const ProductServices = require('../ProductService');
+// const UserServices = require('../UserServices');
+// const OrderServices = require('../OrderServices');
+// const PageServices = require('../PageServices');
+// const CustomerServices = require('../CustomerService');
+const StaticFunctions = require('../../utilities/staticFunctions');
 
 class IndexingService{
+    static injectStaticDependencies(){
+        this.redisKeys = RedisKeys;
+        this.redisUtils = RedisUtils;
+        this.mangoUtils = MangoUtils;
+        this.staticFunctions = StaticFunctions;
+    }
+
     static async runIndexing(){
         try{
             // let task = [];
@@ -31,6 +39,7 @@ class IndexingService{
             // console.log(colors.cyan('- Customer Redis indexing complete'));
             // console.log(colors.cyan('- Page Redis indexing complete'));
             // return results[4];
+            return'';
         }catch(err){
             console.log(colors.red(err.stack));
             process.exit(1);
@@ -38,4 +47,7 @@ class IndexingService{
     }
 }
 
-module.exports = IndexingService;
+module.exports = {
+    dependencies: IndexingService.injectStaticDependencies,
+    IndexingService: IndexingService
+};

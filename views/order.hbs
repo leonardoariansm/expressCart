@@ -25,7 +25,7 @@
                 </div>
             </li>
             <li class="list-group-item"><strong> Order date: </strong><span class="pull-right">{{formatDate result.orderDate "DD/MM/YYYY hh:mmA"}}</span></li>
-            <li class="list-group-item"><strong> Order ID: </strong><span class="pull-right">{{result._id}}</span></li>
+            <li class="list-group-item"><strong> Order ID: </strong><span class="pull-right">{{result.orderId}}</span></li>
             <li class="list-group-item"><strong> Payment Gateway ref: </strong><span class="pull-right">{{result.orderPaymentId}}</span></li>
             <li class="list-group-item"><strong> Payment Gateway: </strong><span class="pull-right">{{result.orderPaymentGateway}}</span></li>
             <li class="list-group-item"><strong> Order total amount: </strong><span class="pull-right">{{currencySymbol config.currencySymbol}}{{formatAmount result.orderTotal}}</span></li>
@@ -65,6 +65,6 @@
                 </li>
             {{/each}}
         </ul>
-        <input type="hidden" id="order_id" value="{{result._id}}">
+        <input type="hidden" id="order_id" value="{{result.orderId}}">
     </div>
 </div>

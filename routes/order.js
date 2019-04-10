@@ -1,144 +1,139 @@
 const express = require('express');
 const common = require('../lib/common');
 const router = express.Router();
-const OrderServices = require('../classes/services/OrderServices');
+const Enums = require('../classes/models/Enums');
+const StaticFunctions = require('../classes/utilities/staticFunctions');
+const{OrderServices} = require('../classes/services/OrderServices');
+const{OrderIndexingService} = require('../classes/services/Indexing/OrderIndexingService');
 
 // Show orders
-router.get('/admin/orders', common.restrict, async (req, res, next) => {
+router.get('/admin/orders', common.restrict, common.checkAccess, async (req, res, next) => {
     try{
         let latestOrders = await OrderServices.getLatestOrders();
         res.render('orders', {
             title: 'Cart',
             orders: latestOrders,
             admin: true,
+            route: 'admin',
             session: req.session,
             message: common.clearSessionValue(req.session, 'message'),
             messageType: common.clearSessionValue(req.session, 'messageType'),
-            helpers: req.handlebars.helpers
+            helpers: req.handlebars.helpers,
+            config: req.app.config
         });
     }catch(err){
-        res.render('orders', {
-            title: 'Cart',
-            orders: [],
-            admin: true,
-            session: req.session,
-            message: common.clearSessionValue(req.session, 'message'),
-            messageType: common.clearSessionValue(req.session, 'messageType'),
-            helpers: req.handlebars.helpers
-        });
+        console.log(err.stack);
     }
 });
 
 // Admin section
-router.get('/admin/orders/bystatus/:orderstatus', common.restrict, (req, res, next) => {
-    const db = req.app.db;
-
-    if(typeof req.params.orderstatus === 'undefined'){
-        res.redirect('/admin/orders');
-        return;
-    }
-
-    // case insensitive search
-    let regex = new RegExp(['^', req.params.orderstatus, '$'].join(''), 'i');
-    db.orders.find({orderStatus: regex}).sort({'orderDate': -1}).limit(10).toArray((err, orders) => {
-        if(err){
-            console.info(err.stack);
+router.get('/admin/orders/bystatus/:orderstatus', common.restrict, async (req, res, next) => {
+    try{
+        let orderStatus = req.params.orderstatus;
+        if(StaticFunctions.isEmpty(orderStatus)){
+            res.redirect('/admin/orders');
+            return;
         }
+        let topOrderByOrderStatus = await OrderServices.getOrderByOrderStatus(orderStatus);
         res.render('orders', {
             title: 'Cart',
-            orders: orders,
+            orders: topOrderByOrderStatus,
             admin: true,
             filteredOrders: true,
-            filteredStatus: req.params.orderstatus,
-            config: req.app.config,
+            filteredStatus: orderStatus,
             session: req.session,
             message: common.clearSessionValue(req.session, 'message'),
             messageType: common.clearSessionValue(req.session, 'messageType'),
-            helpers: req.handlebars.helpers
+            helpers: req.handlebars.helpers,
+            config: req.app.config
         });
-    });
+    }catch(err){
+        console.info(err.stack);
+    }
 });
 
 // render the editor
-router.get('/admin/order/view/:id', common.restrict, (req, res) => {
-    const db = req.app.db;
-    db.orders.findOne({_id: common.getId(req.params.id)}, (err, result) => {
-        if(err){
-            console.info(err.stack);
+router.get('/admin/order/view/:id', common.restrict, async (req, res) => {
+    try{
+        let orderId = req.params.id;
+        if(StaticFunctions.isEmpty(orderId)){
+            throw Error(Enums.INVALID_ORDER_ID);
         }
+        let order = await OrderServices.getOrderDetails(orderId);
         res.render('order', {
             title: 'View order',
-            result: result,
-            config: req.app.config,
+            result: order,
             session: req.session,
             message: common.clearSessionValue(req.session, 'message'),
             messageType: common.clearSessionValue(req.session, 'messageType'),
             editor: true,
             admin: true,
-            helpers: req.handlebars.helpers
+            helpers: req.handlebars.helpers,
+            config: req.app.config
         });
-    });
+    }catch(err){
+        console.log('Error: /admin/order/view/:id route');
+        res.status(404).send({});
+    }
 });
 
 // Admin section
-router.get('/admin/orders/filter/:search', common.restrict, (req, res, next) => {
-    const db = req.app.db;
+router.get('/admin/orders/filter/:search', common.restrict, async (req, res, next) => {
     let searchTerm = req.params.search;
-    let ordersIndex = req.app.ordersIndex;
-
-    let lunrIdArray = [];
-    ordersIndex.search(searchTerm).forEach((id) => {
-        lunrIdArray.push(common.getId(id.ref));
-    });
-
-    // we search on the lunr indexes
-    db.orders.find({_id: {$in: lunrIdArray}}).toArray((err, orders) => {
-        if(err){
-            console.info(err.stack);
-        }
-        res.render('orders', {
-            title: 'Order results',
-            orders: orders,
-            admin: true,
-            config: req.app.config,
-            session: req.session,
-            searchTerm: searchTerm,
-            message: common.clearSessionValue(req.session, 'message'),
-            messageType: common.clearSessionValue(req.session, 'messageType'),
-            helpers: req.handlebars.helpers
-        });
+    let orders = await OrderIndexingService.getFilteredOrders(searchTerm);
+    res.render('orders', {
+        title: 'Order results',
+        orders: orders,
+        admin: true,
+        config: req.app.config,
+        session: req.session,
+        searchTerm: searchTerm,
+        message: common.clearSessionValue(req.session, 'message'),
+        messageType: common.clearSessionValue(req.session, 'messageType'),
+        helpers: req.handlebars.helpers
     });
 });
 
 // order product
-router.get('/admin/order/delete/:id', common.restrict, (req, res) => {
-    const db = req.app.db;
-
-    // remove the article
-    db.orders.remove({_id: common.getId(req.params.id)}, {}, (err, numRemoved) => {
-        if(err){
-            console.info(err.stack);
+router.get('/admin/order/delete/:id', common.restrict, async (req, res) => {
+    try{
+        let orderId = req.params.id;
+        if(StaticFunctions.isEmpty(orderId)){
+            throw Error(Enums.INVALID_ORDER_ID);
         }
-        // remove the index
-        common.indexOrders(req.app)
-        .then(() => {
-            // redirect home
-            req.session.message = 'Order successfully deleted';
-            req.session.messageType = 'success';
-            res.redirect('/admin/orders');
-        });
-    });
+        await OrderServices.deleteOrder(orderId);
+    }catch(err){
+        console.info(err.stack);
+    }
 });
 
 // update order status
-router.post('/admin/order/statusupdate', common.restrict, common.checkAccess, (req, res) => {
-    const db = req.app.db;
-    db.orders.update({_id: common.getId(req.body.order_id)}, {$set: {orderStatus: req.body.status}}, {multi: false}, (err, numReplaced) => {
-        if(err){
-            console.info(err.stack);
+router.post('/admin/order/statusupdate', common.restrict, common.checkAccess, async (req, res) => {
+    try{
+        let status = req.body.status;
+        let orderId = req.body.order_id;
+        if(StaticFunctions.isEmpty(status)){
+            throw Error(Enums.INVALID_ORDER_STATUS);
         }
+        if(StaticFunctions.isEmpty(orderId)){
+            throw Error(Enums.INVALID_ORDER_ID);
+        }
+        await OrderServices.updateOrderStatus(orderId, status);
         res.status(200).json({message: 'Status successfully updated'});
-    });
+    }catch(err){
+        switch(err.message){
+            case Enums.INVALID_ORDER_ID:
+                req.session.message = Enums.INVALID_ORDER_ID;
+                break;
+            case Enums.INVALID_ORDER_STATUS:
+                req.session.message = Enums.INVALID_ORDER_STATUS;
+                break;
+            default:
+                req.session.message = Enums.UNHANDLED_EXCEPTION;
+        }
+        req.session.messageType = Enums.DANGER;
+        res.redirect('/admin/orders');
+    }
 });
 
 module.exports = router;

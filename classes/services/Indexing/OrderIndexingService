@@ -1,0 +1,149 @@
+const{IndexingService} = require('./IndexingService');
+const promise = require('bluebird');
+const config = require('config');
+const colors = require('colors');
+const constants = require('../../utilities/Constants');
+
+class OrderIndexingService extends IndexingService{
+    static injectStaticDependencies(){
+        super.injectStaticDependencies();
+    }
+
+    static async indexOrder(order){
+        let multi = this.redisUtils.queueSuccessiveCommands();
+        if(order.orderFirstname)this.redisUtils.addToSet(this.redisKeys.getOrderByOrderFirstNameKey(order.orderFirstname.trim().toLowerCase()), order.orderId, multi);
+        if(order.orderLastname)this.redisUtils.addToSet(this.redisKeys.getOrderByOrderLastNameKey(order.orderLastname.trim().toLowerCase()), order.orderId, multi);
+        if(order.orderEmail)this.redisUtils.addToSet(this.redisKeys.getOrderByOrderEmailKey(order.orderEmail.trim().toLowerCase()), order.orderId, multi);
+        if(order.orderPostcode)this.redisUtils.addToSet(this.redisKeys.getOrderByOrderPostcodeKey(order.orderPostcode.trim().toLowerCase()), order.orderId, multi);
+        await this.redisUtils.executeQueuedCommands(multi);
+        console.log(colors.cyan('- Order indexing complete'));
+    }
+
+    static async deleteIndexing(orderId, order){
+        order = (this.staticFunctions.isNotEmpty(order)) ? order : (await this.getOrdersByOrderIds([orderId]))[0];
+        let multi = this.redisUtils.queueSuccessiveCommands();
+        if(order.orderFirstname)this.redisUtils.removeToSet(this.redisKeys.getOrderByOrderFirstNameKey(order.orderFirstname.toLowerCase()), order.orderId, multi);
+        if(order.orderLastname)this.redisUtils.removeToSet(this.redisKeys.getOrderByOrderLastNameKey(order.orderLastname.toLowerCase()), order.orderId, multi);
+        if(order.orderEmail)this.redisUtils.removeToSet(this.redisKeys.getOrderByOrderEmailKey(order.orderEmail.toLowerCase()), order.orderId, multi);
+        if(order.orderPostcode)this.redisUtils.removeToSet(this.redisKeys.getOrderByOrderPostcodeKey(order.orderPostcode.toLowerCase()), order.orderId, multi);
+        await this.redisUtils.executeQueuedCommands(multi);
+    }
+
+    static async performFirstNameOperation(searchCriteria){
+        let that = this;
+        let context = {};
+        context.keyType = 'union';
+        context.isTempKey = false;
+        context.intersectionSet = [];
+        context.differenceSet = [];
+        context.UnionSet = [];
+        let orderByOrderFirstNameKey = that.redisKeys.getOrderByOrderFirstNameKey(searchCriteria.firstName);
+        context.UnionSet.push(orderByOrderFirstNameKey);
+        return context;
+    }
+
+    static async performLastNameOperation(searchCriteria){
+        let that = this;
+        let context = {};
+        context.keyType = 'union';
+        context.isTempKey = false;
+        context.intersectionSet = [];
+        context.differenceSet = [];
+        context.UnionSet = [];
+        let orderByOrderLastNameKey = that.redisKeys.getOrderByOrderLastNameKey(searchCriteria.lastName);
+        context.UnionSet.push(orderByOrderLastNameKey);
+        return context;
+    }
+
+    static async performOrderEmailOperation(searchCriteria){
+        let that = this;
+        let context = {};
+        context.keyType = 'union';
+        context.isTempKey = false;
+        context.intersectionSet = [];
+        context.differenceSet = [];
+        context.UnionSet = [];
+        let orderByOrderEmailKey = that.redisKeys.getOrderByOrderEmailKey(searchCriteria.orderEmail);
+        context.UnionSet.push(orderByOrderEmailKey);
+        return context;
+    }
+
+    static async performOrderPostCodeOperation(searchCriteria){
+        let that = this;
+        let context = {};
+        context.keyType = 'union';
+        context.isTempKey = false;
+        context.intersectionSet = [];
+        context.differenceSet = [];
+        context.UnionSet = [];
+        let orderByOrderPostcodeKey = that.redisKeys.getOrderByOrderPostcodeKey(searchCriteria.orderPostcode);
+        context.UnionSet.push(orderByOrderPostcodeKey);
+        return context;
+    }
+
+    static async getOperationsRedisKeys(searchCriteria){
+        let pendingPromise = [];
+        pendingPromise.push(this.performFirstNameOperation(searchCriteria));
+        pendingPromise.push(this.performLastNameOperation(searchCriteria));
+        pendingPromise.push(this.performOrderEmailOperation(searchCriteria));
+        pendingPromise.push(this.performOrderPostCodeOperation(searchCriteria));
+        let result = await promise.all(pendingPromise);
+        return result;
+    }
+
+    static async getFilteredOrders(searchTerm){
+        let searchCriteria = {};
+        searchCriteria.orderPostcode = searchTerm;
+        searchCriteria.orderEmail = searchTerm;
+        searchCriteria.lastName = searchTerm;
+        searchCriteria.firstName = searchTerm;
+        let operationRedisKeys = await this.getOperationsRedisKeys(searchCriteria);
+        let intersectSet = [];
+        let diffSet = [];
+        let delSet = [];
+        let unionSet = [];
+        let multi = this.redisUtils.queueSuccessiveCommands();
+        for(let key of operationRedisKeys){
+            if(key.skipped !== true){
+                intersectSet = intersectSet.concat(key.intersectionSet);
+                diffSet = diffSet.concat(key.differenceSet);
+                unionSet = unionSet.concat(key.UnionSet);
+                if(key.isTempKey) delSet.push(key.keyName);
+            }
+        }
+        let finalKey = 'ordGenericFilterKey:';
+        this.redisUtils.setUnionAndStore(finalKey, unionSet, multi);
+        this.redisUtils.setInterAndStore(finalKey, intersectSet, multi);
+        this.redisUtils.setDifferenceAndStore(finalKey, diffSet, multi);
+        this.redisUtils.expireKey(finalKey, 300, multi);
+        for(let delKey of delSet){
+            this.redisUtils.expireKey(delKey, 10, multi);
+        }
+        await this.redisUtils.executeQueuedCommands(multi);
+        let orderIds = await this.redisUtils.getAllSetMembers(finalKey);
+        let orders = await this.getOrdersByOrderIds(orderIds);
+        return orders;
+    }
+
+    static async getOrdersByOrderIds(orderIds){
+        if(this.staticFunctions.isEmpty(orderIds))return[];
+        let multi = this.redisUtils.queueSuccessiveCommands();
+        for(let orderId of orderIds){
+            this.redisUtils.getAllValueFromHash(this.redisKeys.getOrderDetailsRedisKeys(orderId), multi);
+            this.redisUtils.getSortedSetRangeByScoreReverse(this.redisKeys.getOrderToOrderProductMappingKey(orderId), constants.PER_ORDER_PER_PRODUCT_MAX_QUANTITY, 0, [constants.PER_ORDER_MAX_PRODUCTS, 0], multi);
+        }
+        let result = await this.redisUtils.executeQueuedCommands(multi);
+        let orders = [];
+        for(let k = 0; k < result.length; k += 2){
+            let order = result[k];
+            order.orderProducts = result[k + 1];
+            orders.push(order);
+        }
+        return orders;
+    }
+}
+
+module.exports = {
+    dependencies: OrderIndexingService.injectStaticDependencies(),
+    OrderIndexingService: OrderIndexingService
+};

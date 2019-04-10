@@ -103,6 +103,21 @@
 				</div>
 				<div id="navbar" class="navbar-collapse collapse">
 					<ul class="nav navbar-nav navbar-right">
+                        {{#ifCond route '==' 'customer'}}
+                            {{#if session.customer}}
+                                <li><a href="/customer/logout"><i class="fa fa-sign-out" aria-hidden="true"> </i>Logout</a></li>
+                            {{else}}
+                                <li><a href="/customer/sign_up"><i class="fa fa-sign-up" aria-hidden="true"></i> SignUp</a></li>
+                                <li><a href="/customer/login"><i class="fa fa-login" aria-hidden="true"></i> Login</a></li>
+                            {{/if}}
+                        {{/ifCond}}
+                        {{#ifCond route '!=' 'customer'}}
+                            {{#if session.user}}
+                                <li><a href="/admin/logout"><i class="fa fa-sign-out" aria-hidden="true"> </i>Logout</a></li>
+                            {{else}}
+                                <li><a href="/admin/login"><i class="fa fa-login" aria-hidden="true"></i> Login</a></li>
+                            {{/if}}
+                        {{/ifCond}}
                         {{#unless admin}}
                         {{#ifCond page '!=' 'checkout'}}
                         {{#ifCond page '!=' 'pay'}}
@@ -114,9 +129,6 @@
                         {{/ifCond}}
                         {{/ifCond}}
                         {{/unless}}
-                        {{#if session.user}}
-							<li><a href="/admin/logout"><i class="fa fa-sign-out" aria-hidden="true"> </i>Logout</a></li>
-						{{/if}}
 					</ul>
 				</div>
 	        </div>

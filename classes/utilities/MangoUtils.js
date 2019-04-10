@@ -63,31 +63,11 @@ class MangoUtils{
             if(collection !== null && collection !== undefined){
                 collection.insert(document, (err, doc) => {
                     if(err){
-                        if(doc){
-                            resolve({
-                                error: 'Failed to insert user: ' + err,
-                                sessionMessage: 'User exists',
-                                sessionMessageType: 'danger',
-                                redirectUrl: '/admin/user/edit/' + doc._id
-                            });
-                            return;
-                        }
-                        resolve({
-                            error: 'Failed to insert user: ' + err,
-                            sessionMessage: 'New user creation failed',
-                            sessionMessageType: 'danger',
-                            redirectUrl: '/admin/user/new'
-                        });
-                    }
-                });
-                resolve({
-                    error: null,
-                    sessionMessage: 'User account inserted',
-                    sessionMessageType: 'success',
-                    redirectUrl: '/admin/users'
+                        reject(err);
+                    }else resolve(Enums.SUCCESS);
                 });
             }else{
-                reject(null);
+                reject(Enums.DANGER);
             }
         });
         return result;
@@ -111,6 +91,9 @@ class MangoUtils{
             case Enums.pageCollectionName:
                 collection = dbInstance.pages;
                 break;
+            case Enums.menuCollectionName:
+                collection = dbInstance.menu;
+                break;
         }
         return collection;
     }
@@ -119,7 +102,7 @@ class MangoUtils{
         let that = this;
         let dbCollection = that.getDbCollection(collectionName);
         return new promise((resolve, reject) => {
-            dbCollection.update({productId: id}, {$set: document}, {multi: false}, (err, product) => {
+            dbCollection.update(id, {$set: document}, {multi: false}, (err, product) => {
                 if(err){
                     console.info(err.stack);
                     reject(err);
@@ -133,7 +116,7 @@ class MangoUtils{
         let that = this;
         let dbCollection = that.getDbCollection(collectionName);
         return new promise((resolve, reject) => {
-            dbCollection.remove({productId: id}, (err, numRemoved) => {
+            dbCollection.remove(id, (err, numRemoved) => {
                 if(err){
                     console.info(err.stack);
                     reject(err);
@@ -142,6 +125,7 @@ class MangoUtils{
             });
         });
     }
+
 }
 
 module.exports = MangoUtils;

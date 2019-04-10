@@ -3,29 +3,45 @@ const crypto = require('crypto');
 const StaticFunctions = require('../utilities/staticFunctions');
 
 class ProductRequestProcessor{
-    static getRawRequestProduct(req, res, isGenerateProductId){
+    static async injectStaticDependencies(){
+        this.staticFunctions = StaticFunctions;
+    }
+
+    static getRawRequestProduct(req, res){
         let product = {
-            productId: req.session.product && req.session.product.productId,
+            productId: req.body.frmProductId,
             productPermalink: req.body.frmProductPermalink,
             productTitle: req.body.frmProductTitle,
-            productPrice: req.body.frmProductPrice,
+            productPrice: parseInt(req.body.frmProductPrice),
             productPublished: req.body.frmProductPublished,
             productDescription: req.body.frmProductDescription,
             productTags: req.body.frmProductTags,
             productOptions: common.cleanHtml(req.body.frmProductOptions),
             productComment: common.checkboxBool(req.body.frmProductComment),
             productAddedDate: new Date(),
-            productStock: req.body.frmProductStock ? parseInt(req.body.frmProductStock) : null
+            productStock: req.body.frmProductStock ? parseInt(req.body.frmProductStock) : 0
         };
-        if(StaticFunctions.checkIsSetOrNot(isGenerateProductId) && StaticFunctions.isEmpty(product.productId)){
-            product.productId = ProductRequestProcessor.getProductId(product);
-        }
         return product;
     }
 
-    static getProductId(product){
-        return crypto.createHash('md5').update(JSON.stringify(product)).digest('hex');
+    static async getRawRequestSearchCriteria(searchTerm, numOfProducts, pageNum){
+        try{
+            let searchCriteria = {};
+            let keywords = this.staticFunctions.getPhrases(searchTerm, ' ');
+            searchCriteria.productDescription = keywords;
+            searchCriteria.productTags = keywords;
+            searchCriteria.productTitle = keywords;
+            searchCriteria.numOfProducts = numOfProducts;
+            searchCriteria.pageNum = pageNum;
+            return searchCriteria;
+        }catch(e){
+            console.log(`Error: getRawRequestSearchCriteria ${e.message}`);
+            throw e;
+        }
     }
 }
 
-module.exports = ProductRequestProcessor;
+module.exports = {
+    dependencies: ProductRequestProcessor.injectStaticDependencies(),
+    ProductRequestProcessor: ProductRequestProcessor
+};

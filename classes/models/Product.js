@@ -7,7 +7,7 @@ class Product{
                 productId: rawRequestProduct.productId,
                 productPermalink: StaticFunctions.getNonEmptyValue([rawRequestProduct.productPermalink, currentProduct.productPermalink]),
                 productTitle: StaticFunctions.getNonEmptyValue([rawRequestProduct.productTitle, currentProduct.productTitle]),
-                productPrice: StaticFunctions.getNonEmptyValue([rawRequestProduct.productPrice, currentProduct.productPrice]),
+                productPrice: parseInt(StaticFunctions.getNonEmptyValue([rawRequestProduct.productPrice, currentProduct.productPrice])),
                 productPublished: StaticFunctions.getNonEmptyValue([rawRequestProduct.productPublished, currentProduct.productPublished]),
                 productDescription: StaticFunctions.getNonEmptyValue([rawRequestProduct.productDescription, currentProduct.productDescription]),
                 productTags: StaticFunctions.getNonEmptyValue([rawRequestProduct.productTags, currentProduct.productTags]),

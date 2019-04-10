@@ -11,7 +11,7 @@
                 <a href="/admin/customers" class="hidden-xs btn btn-warning btn-lg"><i class="fa fa-times" aria-hidden="true"></i></a>
             </span>
         </div>
-        <p class="text-warning top-pad-10">Customers can be filtered by: email, name or phone numnber</p>
+        <p class="text-warning top-pad-10">Customers can be filtered by: email, name or phone number</p>
     </div>
     {{#if customers}}
         <div class="col-lg-12">
@@ -40,7 +40,7 @@
                 {{#each customers}}
                     <li class="list-group-item">
                         <div class="row">
-                            <a href="/admin/customer/view/{{this._id}}">
+                            <a href="/admin/customer/view/{{this.customerId}}">
                                 <div class="col-md-4">
                                     <h5 class="">{{this.email}}</h5>
                                 </div>
@@ -58,7 +58,7 @@
         </div>
     {{else}}
     <h4 class="text-center">
-        No orders found
+        No Customer found
     </h4>
     {{/if}}
 </div>

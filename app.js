@@ -14,7 +14,7 @@ const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const MangoUtils = require('./classes/utilities/MangoUtils');
 const RedisUtils = require('./classes/Redis/RedisUtils');
-const IndexingService = require('./classes/services/IndexingService');
+const{IndexingService} = require('./classes/services/Indexing/IndexingService');
 let handlebars = require('express-handlebars');
 // require the routes
 const index = require('./routes/index');
@@ -23,6 +23,7 @@ const product = require('./routes/product');
 const customer = require('./routes/customer');
 const order = require('./routes/order');
 const user = require('./routes/user');
+const stripe = require('./routes/payments/stripe');
 
 app.set('views', path.join(__dirname, '/views'));
 app.engine('hbs', handlebars({
@@ -32,6 +33,7 @@ app.engine('hbs', handlebars({
     partialsDir: [ path.join(__dirname, 'views') ]
 }));
 app.set('view engine', 'hbs');
+app.config = config.get('settings');
 
 // helpers for the handlebar templating platform
 handlebars = handlebars.create({
@@ -235,6 +237,7 @@ app.use((req, res, next) => {
 
 // Ran on all routes
 app.use((req, res, next) => {
+    req.app = app;
     res.setHeader('Cache-Control', 'no-cache, no-store');
     next();
 });
@@ -246,6 +249,7 @@ app.use('/', product);
 app.use('/', order);
 app.use('/', user);
 app.use('/', admin);
+app.use('/stripe', stripe);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {
@@ -301,6 +305,7 @@ MangoUtils.getMangoDbInstance()
         dbInstance.orders = dbInstance.collection('orders');
         dbInstance.pages = dbInstance.collection('pages');
         dbInstance.customers = dbInstance.collection('customers');
+        dbInstance.menu = dbInstance.collection('menu');
         return dbInstance;
     })
     .then((dbInstance) => {

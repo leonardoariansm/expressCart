@@ -1,0 +1,42 @@
+<div class="col-md-offset-4 col-md-4 col-lg-offset-4 col-lg-4" style="padding-top: 100px" >
+    <form class="form-signin" action="{{forwardUrl}}" method="post" role="form" data-toggle="validator">
+        <input type="hidden" name="frm_referringUrl" value="{{referringUrl}}">
+        <h2 class="form-signin-heading">Please sign in</h2>
+        <div class="form-group">
+            <input type="email" id="email" name="email" class="form-control" placeholder="email address" required autofocus>
+        </div>
+        <div class="form-group">
+            <input type="firstName" id="firstName" name="firstName" class="form-control" placeholder="firstName" required autofocus>
+        </div>
+        <div class="form-group">
+            <input type="lastName" id="lastName" name="lastName" class="form-control" placeholder="lastName" required autofocus>
+        </div>
+        <div class="form-group">
+            <input type="address1" id="address1" name="address1" class="form-control" placeholder="address1" required autofocus>
+        </div>
+        <div class="form-group">
+            <input type="address2" id="address2" name="address2" class="form-control" placeholder="address2">
+        </div>
+        <div class="form-group">
+            <input type="country" id="country" name="country" class="form-control" placeholder="country" required autofocus>
+        </div>
+        <div class="form-group">
+            <input type="state" id="state" name="state" class="form-control" placeholder="state" required autofocus>
+        </div>
+        <div class="form-group">
+            <input type="postcode" id="postcode" name="postcode" class="form-control" placeholder="postcode" required autofocus>
+        </div>
+        <div class="form-group">
+            <input type="password" id="password" name="password" class="form-control" placeholder="Password" required>
+        </div>
+        <div>
+            <input type="phoneNumber" id="phoneNumber" name="phoneNumber" class="form-control" placeholder="phoneNumber" required>
+        </div>
+        {{#ifCond route '==' 'admin'}}
+            <button class="btn btn-lg btn-primary btn-block" id="adminSignUp" type="submit">Register</button>
+        {{/ifCond}}
+        {{#ifCond route '==' 'customer'}}
+            <button class="btn btn-lg btn-primary btn-block" id="customerSignUp" type="submit">Register</button>
+        {{/ifCond}}
+    </form>
+</div>
