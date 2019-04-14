@@ -103,7 +103,6 @@ class ProductService{
                         this.productIndexingService.updateProductIndexing(productDetails, updatedProduct),
                         this.productDataStores.setProductDetails(productId, updatedProduct)
                     ]);
-                    this.productDataStores.setProductDetails(productId, updatedProduct);
                     return updatedProduct;
                 }
             }else{

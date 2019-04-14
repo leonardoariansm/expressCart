@@ -107,9 +107,10 @@ class ProductDataStores{
         try{
             let tasks = [];
             let userId = req.session && req.session.user && req.session.user.userId;
+            let productPermaLink = this.getProductProperty(productId, 'productPermalink');
             let multi = this.redisUtils.queueSuccessiveCommands();
             this.redisUtils.removeToSet(this.redisKeys.getUserToUserProductsMapping(userId), productId, multi);
-            this.redisUtils.delete(this.redisKeys.getProductPermaLinkRediskey(productId), multi);
+            this.redisUtils.delete(this.redisKeys.getProductPermaLinkRediskey(productPermaLink), multi);
             this.redisUtils.delete(this.redisKeys.getProductDetailsRedisKey(productId), multi);
             this.redisUtils.removeToSortedSet(this.redisKeys.getProductRedisKey(), productId, multi);
             tasks.push(this.mangoUtils.deleteDocument({productId: productId}, this.enums.productCollectionName));

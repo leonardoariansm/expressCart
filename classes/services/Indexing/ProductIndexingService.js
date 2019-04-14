@@ -19,7 +19,7 @@ class ProductIndexingService extends IndexingService{
             this.productDescriptionIndexing(product, {}, multi)
         ]);
         await this.redisUtils.executeQueuedCommands(multi);
-        console.log(colors.cyan('- Order indexing complete'));
+        console.log(colors.cyan('- Product indexing complete'));
     }
 
     static async productTitleIndexing(product, currentProduct, multi){
@@ -102,6 +102,7 @@ class ProductIndexingService extends IndexingService{
         }
         await promise.all(tasks);
         let result = await this.redisUtils.executeQueuedCommands(multi);
+        console.log(colors.cyan('- Updated Product indexing complete'));
         return result;
     }
 
