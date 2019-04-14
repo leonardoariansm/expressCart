@@ -2,58 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="4b7d7785-f35f-4780-8854-5caa09e8139b" name="Default Changelist" comment="co">
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/app.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/classes/Redis/RedisKeys.js" beforeDir="false" afterPath="$PROJECT_DIR$/classes/Redis/RedisKeys.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/classes/Redis/RedisUtils.js" beforeDir="false" afterPath="$PROJECT_DIR$/classes/Redis/RedisUtils.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/classes/RequestProcessor/ProductRequestProcessor.js" beforeDir="false" afterPath="$PROJECT_DIR$/classes/RequestProcessor/ProductRequestProcessor.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/classes/models/Enums.js" beforeDir="false" afterPath="$PROJECT_DIR$/classes/models/Enums.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/classes/models/Product.js" beforeDir="false" afterPath="$PROJECT_DIR$/classes/models/Product.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/classes/services/AdminServices.js" beforeDir="false" afterPath="$PROJECT_DIR$/classes/services/AdminServices.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/classes/services/CustomerService.js" beforeDir="false" afterPath="$PROJECT_DIR$/classes/services/CustomerService.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/classes/services/IndexingService.js" beforeDir="false" afterPath="$PROJECT_DIR$/classes/services/Indexing/IndexingService.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/classes/services/OrderServices.js" beforeDir="false" afterPath="$PROJECT_DIR$/classes/services/OrderServices.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/classes/services/PageServices.js" beforeDir="false" afterPath="$PROJECT_DIR$/classes/services/PageServices.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/classes/services/ProductService.js" beforeDir="false" afterPath="$PROJECT_DIR$/classes/services/ProductService.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/classes/services/UrlService.js" beforeDir="false" afterPath="$PROJECT_DIR$/classes/UrlService/ProductUrls.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/classes/services/UserServices.js" beforeDir="false" afterPath="$PROJECT_DIR$/classes/services/UserServices.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/classes/utilities/Constants.js" beforeDir="false" afterPath="$PROJECT_DIR$/classes/utilities/Constants.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/classes/utilities/MangoUtils.js" beforeDir="false" afterPath="$PROJECT_DIR$/classes/utilities/MangoUtils.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/classes/utilities/staticFunctions.js" beforeDir="false" afterPath="$PROJECT_DIR$/classes/utilities/staticFunctions.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/config/default.json" beforeDir="false" afterPath="$PROJECT_DIR$/config/default.json" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/lib/common.js" beforeDir="false" afterPath="$PROJECT_DIR$/lib/common.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/javascripts/expressCart.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/javascripts/expressCart.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/public/javascripts/expressCart.min.js" beforeDir="false" afterPath="$PROJECT_DIR$/public/javascripts/expressCart.min.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/routes/admin.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/admin.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/routes/customer.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/customer.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/routes/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/routes/order.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/order.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/routes/payments/stripe.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/payments/stripe.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/package.json" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/routes/product.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/product.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/routes/user.js" beforeDir="false" afterPath="$PROJECT_DIR$/routes/user.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/views/customer.hbs" beforeDir="false" afterPath="$PROJECT_DIR$/views/customer.hbs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/views/customers.hbs" beforeDir="false" afterPath="$PROJECT_DIR$/views/customers.hbs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/views/layouts/layout.hbs" beforeDir="false" afterPath="$PROJECT_DIR$/views/layouts/layout.hbs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/views/login.hbs" beforeDir="false" afterPath="$PROJECT_DIR$/views/login.hbs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/views/order.hbs" beforeDir="false" afterPath="$PROJECT_DIR$/views/order.hbs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/views/orders.hbs" beforeDir="false" afterPath="$PROJECT_DIR$/views/orders.hbs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/views/partials/menu.hbs" beforeDir="false" afterPath="$PROJECT_DIR$/views/partials/menu.hbs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/views/product_edit.hbs" beforeDir="false" afterPath="$PROJECT_DIR$/views/product_edit.hbs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/views/product_new.hbs" beforeDir="false" afterPath="$PROJECT_DIR$/views/product_new.hbs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/views/settings_page_edit.hbs" beforeDir="false" afterPath="$PROJECT_DIR$/views/settings_page_edit.hbs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/views/settings_pages.hbs" beforeDir="false" afterPath="$PROJECT_DIR$/views/settings_pages.hbs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/views/themes/Cloth/index.hbs" beforeDir="false" afterPath="$PROJECT_DIR$/views/themes/Cloth/index.hbs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/views/themes/Cloth/pay.hbs" beforeDir="false" afterPath="$PROJECT_DIR$/views/themes/Cloth/pay.hbs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/views/themes/Cloth/payment_complete.hbs" beforeDir="false" afterPath="$PROJECT_DIR$/views/themes/Cloth/payment_complete.hbs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/views/themes/Cloth/product.hbs" beforeDir="false" afterPath="$PROJECT_DIR$/views/themes/Cloth/product.hbs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/views/themes/Material/index.hbs" beforeDir="false" afterPath="$PROJECT_DIR$/views/themes/Material/index.hbs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/views/themes/Material/payment_complete.hbs" beforeDir="false" afterPath="$PROJECT_DIR$/views/themes/Material/payment_complete.hbs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/views/themes/Material/product.hbs" beforeDir="false" afterPath="$PROJECT_DIR$/views/themes/Material/product.hbs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/views/themes/Mono/index.hbs" beforeDir="false" afterPath="$PROJECT_DIR$/views/themes/Mono/index.hbs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/views/themes/Mono/product.hbs" beforeDir="false" afterPath="$PROJECT_DIR$/views/themes/Mono/product.hbs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/views/user_edit.hbs" beforeDir="false" afterPath="$PROJECT_DIR$/views/user_edit.hbs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/views/users.hbs" beforeDir="false" afterPath="$PROJECT_DIR$/views/users.hbs" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -111,11 +63,11 @@
           <entry key="OrderIndexingService" value="15" />
           <entry key="dockerignore" value="1" />
           <entry key="gitignore" value="2" />
-          <entry key="hbs" value="99" />
+          <entry key="hbs" value="101" />
           <entry key="jpeg" value="1" />
           <entry key="jpg" value="1" />
-          <entry key="js" value="947" />
-          <entry key="json" value="56" />
+          <entry key="js" value="951" />
+          <entry key="json" value="58" />
           <entry key="md" value="1" />
           <entry key="png" value="1" />
           <entry key="ts" value="7" />
@@ -125,10 +77,10 @@
       </usages-collector>
       <usages-collector id="statistics.file.types.open">
         <counts>
-          <entry key="Handlebars/Mustache" value="98" />
+          <entry key="Handlebars/Mustache" value="100" />
           <entry key="Image" value="3" />
-          <entry key="JSON" value="56" />
-          <entry key="JavaScript" value="1018" />
+          <entry key="JSON" value="58" />
+          <entry key="JavaScript" value="1022" />
           <entry key="Markdown" value="1" />
           <entry key="PLAIN_TEXT" value="5" />
           <entry key="TypeScript" value="7" />
@@ -144,8 +96,8 @@
           <entry key="JavaScript Console" value="90" />
           <entry key="OrderIndexingService" value="3545" />
           <entry key="hbs" value="1178" />
-          <entry key="js" value="78699" />
-          <entry key="json" value="926" />
+          <entry key="js" value="78819" />
+          <entry key="json" value="934" />
           <entry key="txt" value="2" />
         </counts>
       </usages-collector>
@@ -153,15 +105,15 @@
         <counts>
           <entry key="CSS" value="1" />
           <entry key="Handlebars/Mustache" value="1157" />
-          <entry key="JSON" value="926" />
-          <entry key="JavaScript" value="82339" />
+          <entry key="JSON" value="934" />
+          <entry key="JavaScript" value="82459" />
           <entry key="PLAIN_TEXT" value="2" />
           <entry key="SQL" value="21" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.lifecycle.project">
         <counts>
-          <entry key="project.closed" value="28" />
+          <entry key="project.closed" value="29" />
           <entry key="project.open.time.1" value="11" />
           <entry key="project.open.time.10" value="2" />
           <entry key="project.open.time.14" value="1" />
@@ -173,13 +125,14 @@
           <entry key="project.open.time.3" value="2" />
           <entry key="project.open.time.6" value="2" />
           <entry key="project.open.time.7" value="1" />
+          <entry key="project.open.time.8" value="1" />
           <entry key="project.open.time.9" value="1" />
-          <entry key="project.opened" value="30" />
+          <entry key="project.opened" value="31" />
         </counts>
       </usages-collector>
       <usages-collector id="statistics.js.language.service.starts">
         <counts>
-          <entry key="ESLintLanguageService" value="27" />
+          <entry key="ESLintLanguageService" value="28" />
           <entry key="TypeScriptServerServiceImpl" value="2" />
         </counts>
       </usages-collector>
@@ -191,10 +144,19 @@
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/classes/utilities/staticFunctions.js">
+        <entry file="file://$PROJECT_DIR$/package.json">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="192">
-              <caret line="128" column="40" selection-start-line="128" selection-start-column="40" selection-end-line="128" selection-end-column="40" />
+            <state relative-caret-position="846">
+              <caret line="47" column="22" selection-start-line="47" selection-start-column="22" selection-end-line="47" selection-end-column="22" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/routes/admin.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="512">
+              <caret line="344" column="7" selection-start-line="344" selection-start-column="7" selection-end-line="344" selection-end-column="7" />
             </state>
           </provider>
         </entry>
@@ -202,67 +164,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/routes/product.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="435">
-              <caret line="70" column="18" selection-start-line="70" selection-start-column="18" selection-end-line="70" selection-end-column="18" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/classes/services/AdminServices.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="182">
-              <caret line="55" column="17" selection-start-line="55" selection-start-column="17" selection-end-line="55" selection-end-column="17" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/routes/customer.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="426">
-              <caret line="146" column="27" lean-forward="true" selection-start-line="146" selection-start-column="27" selection-end-line="146" selection-end-column="27" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/public/javascripts/expressCart.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="256">
-              <caret line="440" column="43" lean-forward="true" selection-start-line="440" selection-start-column="43" selection-end-line="440" selection-end-column="43" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/views/partials/menu.hbs">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="342">
-              <caret line="19" column="49" selection-start-line="19" selection-start-column="49" selection-end-line="19" selection-end-column="49" />
-              <folding>
-                <element signature="e#1644#1650#0#HTML" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/views/themes/Cloth/front-menu.hbs">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="342">
-              <caret line="19" column="26" lean-forward="true" selection-start-line="19" selection-start-column="26" selection-end-line="19" selection-end-column="26" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/views/signUp.hbs">
-          <provider selected="true" editor-type-id="text-editor">
-            <state>
-              <folding>
-                <element signature="n#style#0;n#div#0;n#!!top" expanded="true" />
-              </folding>
+            <state relative-caret-position="520">
+              <caret line="260" selection-start-line="260" selection-end-line="260" />
             </state>
           </provider>
         </entry>
@@ -270,22 +173,60 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/classes/UrlService/ProductUrls.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="396">
-              <caret line="22" column="8" selection-start-line="22" selection-start-column="8" selection-end-line="22" selection-end-column="8" />
+            <state relative-caret-position="486">
+              <caret line="27" column="5" lean-forward="true" selection-start-line="27" selection-start-column="5" selection-end-line="27" selection-end-column="5" />
             </state>
           </provider>
         </entry>
       </file>
       <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/classes/services/ProductService.js">
+        <entry file="file://$PROJECT_DIR$/node_modules/eslint/lib/config.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="215">
-              <caret line="216" column="20" selection-start-line="216" selection-start-column="20" selection-end-line="216" selection-end-column="20" />
-              <folding>
-                <element signature="n#!!block;n#ProductLunrIndexing#0;n#ProductService#0" />
-              </folding>
+            <state relative-caret-position="3906">
+              <caret line="217" selection-start-line="217" selection-end-line="217" />
             </state>
           </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/app.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="3222">
+              <caret line="179" column="40" selection-start-line="179" selection-start-column="36" selection-end-line="179" selection-end-column="40" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/views/layouts/layout.hbs">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="2880">
+              <caret line="160" column="17" selection-start-line="160" selection-start-column="17" selection-end-line="160" selection-end-column="31" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/views/partials/menu.hbs">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="432">
+              <caret line="24" selection-start-line="24" selection-end-line="24" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/classes/services/UserServices.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="324">
+              <caret line="18" column="62" selection-start-line="18" selection-start-column="62" selection-end-line="18" selection-end-column="62" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/bin/testdata.json">
+          <provider selected="true" editor-type-id="text-editor" />
         </entry>
       </file>
     </leaf>
@@ -299,11 +240,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>payment_complete</find>
-      <find>forgotten_action</find>
-      <find>form-signin-heading</find>
-      <find>showFooter</find>
-      <find>footerHtml</find>
       <find>notify_message</find>
       <find>noti</find>
       <find>/customer/reset/</find>
@@ -329,6 +265,11 @@
       <find>filter</find>
       <find>menu</find>
       <find>filte</find>
+      <find>port</find>
+      <find>config</find>
+      <find>delet</find>
+      <find>ProductUrls</find>
+      <find>ProductU</find>
     </findStrings>
     <replaceStrings>
       <replace>this.productId</replace>
@@ -349,7 +290,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/classes/services/validator/CustomerValidator.js" />
         <option value="$PROJECT_DIR$/classes/RequestProcessor/CustomerRequestProcessor.js" />
         <option value="$PROJECT_DIR$/views/customers.hbs" />
         <option value="$PROJECT_DIR$/public/javascripts/expressCart.min.js" />
@@ -376,7 +316,6 @@
         <option value="$PROJECT_DIR$/classes/RequestProcessor/UserRequestProcessor.js" />
         <option value="$PROJECT_DIR$/classes/services/validator/UserValidator.js" />
         <option value="$PROJECT_DIR$/classes/services/CustomerService.js" />
-        <option value="$PROJECT_DIR$/classes/services/UserServices.js" />
         <option value="$PROJECT_DIR$/routes/user.js" />
         <option value="$PROJECT_DIR$/routes/order.js" />
         <option value="$PROJECT_DIR$/views/product_new.hbs" />
@@ -399,6 +338,8 @@
         <option value="$PROJECT_DIR$/classes/utilities/staticFunctions.js" />
         <option value="$PROJECT_DIR$/classes/services/Indexing/ProductIndexingService.js" />
         <option value="$PROJECT_DIR$/public/javascripts/expressCart.js" />
+        <option value="$PROJECT_DIR$/classes/services/UserServices.js" />
+        <option value="$PROJECT_DIR$/package.json" />
         <option value="$PROJECT_DIR$/routes/product.js" />
       </list>
     </option>
@@ -466,6 +407,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="PackagesPane" />
       <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
@@ -477,35 +419,7 @@
             <path>
               <item name="expressCart" type="b2602c69:ProjectViewProjectNode" />
               <item name="expressCart" type="462c0819:PsiDirectoryNode" />
-              <item name=".idea" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="expressCart" type="b2602c69:ProjectViewProjectNode" />
-              <item name="expressCart" type="462c0819:PsiDirectoryNode" />
-              <item name="bin" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="expressCart" type="b2602c69:ProjectViewProjectNode" />
-              <item name="expressCart" type="462c0819:PsiDirectoryNode" />
               <item name="classes" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="expressCart" type="b2602c69:ProjectViewProjectNode" />
-              <item name="expressCart" type="462c0819:PsiDirectoryNode" />
-              <item name="classes" type="462c0819:PsiDirectoryNode" />
-              <item name="models" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="expressCart" type="b2602c69:ProjectViewProjectNode" />
-              <item name="expressCart" type="462c0819:PsiDirectoryNode" />
-              <item name="classes" type="462c0819:PsiDirectoryNode" />
-              <item name="Redis" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="expressCart" type="b2602c69:ProjectViewProjectNode" />
-              <item name="expressCart" type="462c0819:PsiDirectoryNode" />
-              <item name="classes" type="462c0819:PsiDirectoryNode" />
-              <item name="RequestProcessor" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="expressCart" type="b2602c69:ProjectViewProjectNode" />
@@ -547,51 +461,20 @@
             <path>
               <item name="expressCart" type="b2602c69:ProjectViewProjectNode" />
               <item name="expressCart" type="462c0819:PsiDirectoryNode" />
+              <item name="node_modules" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="expressCart" type="b2602c69:ProjectViewProjectNode" />
+              <item name="expressCart" type="462c0819:PsiDirectoryNode" />
+              <item name="node_modules" type="462c0819:PsiDirectoryNode" />
+              <item name="eslint" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="expressCart" type="b2602c69:ProjectViewProjectNode" />
+              <item name="expressCart" type="462c0819:PsiDirectoryNode" />
+              <item name="node_modules" type="462c0819:PsiDirectoryNode" />
+              <item name="eslint" type="462c0819:PsiDirectoryNode" />
               <item name="lib" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="expressCart" type="b2602c69:ProjectViewProjectNode" />
-              <item name="expressCart" type="462c0819:PsiDirectoryNode" />
-              <item name="node_modules" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="expressCart" type="b2602c69:ProjectViewProjectNode" />
-              <item name="expressCart" type="462c0819:PsiDirectoryNode" />
-              <item name="node_modules" type="462c0819:PsiDirectoryNode" />
-              <item name="express" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="expressCart" type="b2602c69:ProjectViewProjectNode" />
-              <item name="expressCart" type="462c0819:PsiDirectoryNode" />
-              <item name="node_modules" type="462c0819:PsiDirectoryNode" />
-              <item name="express" type="462c0819:PsiDirectoryNode" />
-              <item name="lib" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="expressCart" type="b2602c69:ProjectViewProjectNode" />
-              <item name="expressCart" type="462c0819:PsiDirectoryNode" />
-              <item name="node_modules" type="462c0819:PsiDirectoryNode" />
-              <item name="express" type="462c0819:PsiDirectoryNode" />
-              <item name="lib" type="462c0819:PsiDirectoryNode" />
-              <item name="router" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="expressCart" type="b2602c69:ProjectViewProjectNode" />
-              <item name="expressCart" type="462c0819:PsiDirectoryNode" />
-              <item name="public" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="expressCart" type="b2602c69:ProjectViewProjectNode" />
-              <item name="expressCart" type="462c0819:PsiDirectoryNode" />
-              <item name="public" type="462c0819:PsiDirectoryNode" />
-              <item name="javascripts" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="expressCart" type="b2602c69:ProjectViewProjectNode" />
-              <item name="expressCart" type="462c0819:PsiDirectoryNode" />
-              <item name="public" type="462c0819:PsiDirectoryNode" />
-              <item name="javascripts" type="462c0819:PsiDirectoryNode" />
-              <item name="expressCart.js" type="620a8d5e:NestingTreeNode" />
             </path>
             <path>
               <item name="expressCart" type="b2602c69:ProjectViewProjectNode" />
@@ -607,33 +490,32 @@
               <item name="expressCart" type="b2602c69:ProjectViewProjectNode" />
               <item name="expressCart" type="462c0819:PsiDirectoryNode" />
               <item name="views" type="462c0819:PsiDirectoryNode" />
+              <item name="layouts" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="expressCart" type="b2602c69:ProjectViewProjectNode" />
+              <item name="expressCart" type="462c0819:PsiDirectoryNode" />
+              <item name="views" type="462c0819:PsiDirectoryNode" />
               <item name="partials" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="expressCart" type="b2602c69:ProjectViewProjectNode" />
               <item name="expressCart" type="462c0819:PsiDirectoryNode" />
               <item name="views" type="462c0819:PsiDirectoryNode" />
-              <item name="themes" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="expressCart" type="b2602c69:ProjectViewProjectNode" />
-              <item name="expressCart" type="462c0819:PsiDirectoryNode" />
-              <item name="views" type="462c0819:PsiDirectoryNode" />
-              <item name="themes" type="462c0819:PsiDirectoryNode" />
-              <item name="Cloth" type="462c0819:PsiDirectoryNode" />
+              <item name="partials" type="462c0819:PsiDirectoryNode" />
+              <item name="payments" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
         </subPane>
       </pane>
-      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
-    <property name="SearchEverywhereHistoryKey" value="sta&#9;FILE&#9;file:///Users/rishabh.t/nodejsProjects/app/expressCart/classes/utilities/staticFunctions.js&#10;product&#9;FILE&#9;file:///Users/rishabh.t/nodejsProjects/app/expressCart/routes/product.js&#10;fro&#9;FILE&#9;file:///Users/rishabh.t/nodejsProjects/app/expressCart/views/themes/Cloth/front-menu.hbs&#10;menu&#9;FILE&#9;file:///Users/rishabh.t/nodejsProjects/app/expressCart/views/partials/menu.hbs&#10;signUp&#9;FILE&#9;file:///Users/rishabh.t/nodejsProjects/app/expressCart/views/signUp.hbs&#10;custom&#9;FILE&#9;file:///Users/rishabh.t/nodejsProjects/app/expressCart/routes/customer.js&#10;customer&#9;FILE&#9;file:///Users/rishabh.t/nodejsProjects/app/expressCart/classes/services/Indexing/CustomerIndexingService.js&#10;admin&#9;FILE&#9;file:///Users/rishabh.t/nodejsProjects/app/expressCart/routes/admin.js&#10;admi&#9;FILE&#9;file:///Users/rishabh.t/nodejsProjects/app/expressCart/routes/admin.js&#10;Produc&#9;FILE&#9;file:///Users/rishabh.t/nodejsProjects/app/expressCart/classes/services/Indexing/ProductIndexingService.js&#10;Product&#9;FILE&#9;file:///Users/rishabh.t/nodejsProjects/app/expressCart/classes/services/Indexing/ProductIndexingService.js&#10;Prod&#9;FILE&#9;file:///Users/rishabh.t/nodejsProjects/app/expressCart/classes/services/Indexing/ProductIndexingService.js&#10;inde&#9;FILE&#9;file:///Users/rishabh.t/nodejsProjects/app/expressCart/routes/index.js&#10;prod&#9;FILE&#9;file:///Users/rishabh.t/nodejsProjects/app/expressCart/routes/product.js&#10;front-menu&#9;FILE&#9;file:///Users/rishabh.t/nodejsProjects/app/expressCart/views/themes/Cloth/front-menu.hbs&#10;index.hb&#9;FILE&#9;file:///Users/rishabh.t/nodejsProjects/app/expressCart/views/themes/Cloth/index.hbs&#10;expre&#9;FILE&#9;file:///Users/rishabh.t/nodejsProjects/app/expressCart/public/javascripts/expressCart.js&#10;pay&#9;FILE&#9;file:///Users/rishabh.t/nodejsProjects/app/expressCart/views/themes/Cloth/pay.hbs&#10;def&#9;FILE&#9;file:///Users/rishabh.t/nodejsProjects/app/expressCart/config/default.json&#10;de&#9;FILE&#9;file:///Users/rishabh.t/nodejsProjects/app/expressCart/config/default.json&#10;lay&#9;FILE&#9;file:///Users/rishabh.t/nodejsProjects/app/expressCart/views/layouts/layout.hbs&#10;l&#9;FILE&#9;file:///Users/rishabh.t/nodejsProjects/app/expressCart/views/layouts/layout.hbs&#10;layout&#9;FILE&#9;file:///Users/rishabh.t/nodejsProjects/app/expressCart/views/layouts/layout.hbs&#10;for&#9;FILE&#9;file:///Users/rishabh.t/nodejsProjects/app/expressCart/views/forgotten.hbs&#10;cus&#9;FILE&#9;file:///Users/rishabh.t/nodejsProjects/app/expressCart/routes/customer.js&#10;forgotten&#9;FILE&#9;file:///Users/rishabh.t/nodejsProjects/app/expressCart/views/forgotten.hbs&#10;ex&#9;FILE&#9;file:///Users/rishabh.t/nodejsProjects/app/expressCart/public/javascripts/expressCart.js&#10;index&#9;FILE&#9;file:///Users/rishabh.t/nodejsProjects/app/expressCart/routes/index.js&#10;payment_complete&#9;FILE&#9;file:///Users/rishabh.t/nodejsProjects/app/expressCart/views/themes/Cloth/payment_complete.hbs&#10;orde&#9;FILE&#9;file:///Users/rishabh.t/nodejsProjects/app/expressCart/routes/order.js&#10;expres&#9;FILE&#9;file:///Users/rishabh.t/nodejsProjects/app/expressCart/public/javascripts/expressCart.js&#10;c&#9;FILE&#9;file:///Users/rishabh.t/nodejsProjects/app/expressCart/routes/customer.js&#10;expr&#9;FILE&#9;file:///Users/rishabh.t/nodejsProjects/app/expressCart/public/javascripts/expressCart.js&#10;login&#9;FILE&#9;file:///Users/rishabh.t/nodejsProjects/app/expressCart/views/login.hbs&#10;custome&#9;FILE&#9;file:///Users/rishabh.t/nodejsProjects/app/expressCart/routes/customer.js&#10;order&#9;FILE&#9;file:///Users/rishabh.t/nodejsProjects/app/expressCart/routes/order.js&#10;produ&#9;FILE&#9;file:///Users/rishabh.t/nodejsProjects/app/expressCart/routes/product.js&#10;user&#9;FILE&#9;file:///Users/rishabh.t/nodejsProjects/app/expressCart/routes/user.js&#10;pr&#9;FILE&#9;file:///Users/rishabh.t/nodejsProjects/app/expressCart/routes/product.js&#10;cust&#9;FILE&#9;file:///Users/rishabh.t/nodejsProjects/app/expressCart/routes/customer.js&#10;layo&#9;FILE&#9;file:///Users/rishabh.t/nodejsProjects/app/expressCart/views/layouts/layout.hbs&#10;adm&#9;FILE&#9;file:///Users/rishabh.t/nodejsProjects/app/expressCart/routes/admin.js&#10;layou&#9;FILE&#9;file:///Users/rishabh.t/nodejsProjects/app/expressCart/views/layouts/layout.hbs&#10;la&#9;FILE&#9;file:///Users/rishabh.t/nodejsProjects/app/expressCart/views/layouts/layout.hbs&#10;admin.js&#9;FILE&#9;file:///Users/rishabh.t/nodejsProjects/app/expressCart/routes/admin.js&#10;Cus&#9;FILE&#9;file:///Users/rishabh.t/nodejsProjects/app/expressCart/classes/services/Indexing/CustomerIndexingService.js&#10;st&#9;FILE&#9;file:///Users/rishabh.t/nodejsProjects/app/expressCart/classes/utilities/staticFunctions.js&#10;com&#9;FILE&#9;file:///Users/rishabh.t/nodejsProjects/app/expressCart/lib/common.js&#10;comm&#9;ACTION&#9;CheckinProject&#10;Sta&#9;FILE&#9;file:///Users/rishabh.t/nodejsProjects/app/expressCart/classes/utilities/staticFunctions.js" />
+    <property name="SearchEverywhereHistoryKey" value="Product&#9;FILE&#9;file:///Users/rishabh.t/nodejsProjects/app/expressCart/routes/product.js&#10;product&#9;FILE&#9;file:///Users/rishabh.t/nodejsProjects/app/expressCart/routes/product.js&#10;pac&#9;FILE&#9;file:///Users/rishabh.t/nodejsProjects/app/expressCart/package.json&#10;User&#9;FILE&#9;file:///Users/rishabh.t/nodejsProjects/app/expressCart/classes/services/UserServices.js&#10;app&#9;FILE&#9;file:///Users/rishabh.t/nodejsProjects/app/expressCart/app.js&#10;config&#9;null&#9;null&#10;sta&#9;FILE&#9;file:///Users/rishabh.t/nodejsProjects/app/expressCart/classes/utilities/staticFunctions.js&#10;fro&#9;FILE&#9;file:///Users/rishabh.t/nodejsProjects/app/expressCart/views/themes/Cloth/front-menu.hbs&#10;menu&#9;FILE&#9;file:///Users/rishabh.t/nodejsProjects/app/expressCart/views/partials/menu.hbs&#10;signUp&#9;FILE&#9;file:///Users/rishabh.t/nodejsProjects/app/expressCart/views/signUp.hbs&#10;custom&#9;FILE&#9;file:///Users/rishabh.t/nodejsProjects/app/expressCart/routes/customer.js&#10;customer&#9;FILE&#9;file:///Users/rishabh.t/nodejsProjects/app/expressCart/classes/services/Indexing/CustomerIndexingService.js&#10;admin&#9;FILE&#9;file:///Users/rishabh.t/nodejsProjects/app/expressCart/routes/admin.js&#10;admi&#9;FILE&#9;file:///Users/rishabh.t/nodejsProjects/app/expressCart/routes/admin.js&#10;Produc&#9;FILE&#9;file:///Users/rishabh.t/nodejsProjects/app/expressCart/classes/services/Indexing/ProductIndexingService.js&#10;Prod&#9;FILE&#9;file:///Users/rishabh.t/nodejsProjects/app/expressCart/classes/services/Indexing/ProductIndexingService.js&#10;inde&#9;FILE&#9;file:///Users/rishabh.t/nodejsProjects/app/expressCart/routes/index.js&#10;prod&#9;FILE&#9;file:///Users/rishabh.t/nodejsProjects/app/expressCart/routes/product.js&#10;front-menu&#9;FILE&#9;file:///Users/rishabh.t/nodejsProjects/app/expressCart/views/themes/Cloth/front-menu.hbs&#10;index.hb&#9;FILE&#9;file:///Users/rishabh.t/nodejsProjects/app/expressCart/views/themes/Cloth/index.hbs&#10;expre&#9;FILE&#9;file:///Users/rishabh.t/nodejsProjects/app/expressCart/public/javascripts/expressCart.js&#10;pay&#9;FILE&#9;file:///Users/rishabh.t/nodejsProjects/app/expressCart/views/themes/Cloth/pay.hbs&#10;def&#9;FILE&#9;file:///Users/rishabh.t/nodejsProjects/app/expressCart/config/default.json&#10;de&#9;FILE&#9;file:///Users/rishabh.t/nodejsProjects/app/expressCart/config/default.json&#10;lay&#9;FILE&#9;file:///Users/rishabh.t/nodejsProjects/app/expressCart/views/layouts/layout.hbs&#10;l&#9;FILE&#9;file:///Users/rishabh.t/nodejsProjects/app/expressCart/views/layouts/layout.hbs&#10;layout&#9;FILE&#9;file:///Users/rishabh.t/nodejsProjects/app/expressCart/views/layouts/layout.hbs&#10;for&#9;FILE&#9;file:///Users/rishabh.t/nodejsProjects/app/expressCart/views/forgotten.hbs&#10;cus&#9;FILE&#9;file:///Users/rishabh.t/nodejsProjects/app/expressCart/routes/customer.js&#10;forgotten&#9;FILE&#9;file:///Users/rishabh.t/nodejsProjects/app/expressCart/views/forgotten.hbs&#10;ex&#9;FILE&#9;file:///Users/rishabh.t/nodejsProjects/app/expressCart/public/javascripts/expressCart.js&#10;index&#9;FILE&#9;file:///Users/rishabh.t/nodejsProjects/app/expressCart/routes/index.js&#10;payment_complete&#9;FILE&#9;file:///Users/rishabh.t/nodejsProjects/app/expressCart/views/themes/Cloth/payment_complete.hbs&#10;orde&#9;FILE&#9;file:///Users/rishabh.t/nodejsProjects/app/expressCart/routes/order.js&#10;expres&#9;FILE&#9;file:///Users/rishabh.t/nodejsProjects/app/expressCart/public/javascripts/expressCart.js&#10;c&#9;FILE&#9;file:///Users/rishabh.t/nodejsProjects/app/expressCart/routes/customer.js&#10;expr&#9;FILE&#9;file:///Users/rishabh.t/nodejsProjects/app/expressCart/public/javascripts/expressCart.js&#10;login&#9;FILE&#9;file:///Users/rishabh.t/nodejsProjects/app/expressCart/views/login.hbs&#10;custome&#9;FILE&#9;file:///Users/rishabh.t/nodejsProjects/app/expressCart/routes/customer.js&#10;order&#9;FILE&#9;file:///Users/rishabh.t/nodejsProjects/app/expressCart/routes/order.js&#10;produ&#9;FILE&#9;file:///Users/rishabh.t/nodejsProjects/app/expressCart/routes/product.js&#10;user&#9;FILE&#9;file:///Users/rishabh.t/nodejsProjects/app/expressCart/routes/user.js&#10;pr&#9;FILE&#9;file:///Users/rishabh.t/nodejsProjects/app/expressCart/routes/product.js&#10;cust&#9;FILE&#9;file:///Users/rishabh.t/nodejsProjects/app/expressCart/routes/customer.js&#10;layo&#9;FILE&#9;file:///Users/rishabh.t/nodejsProjects/app/expressCart/views/layouts/layout.hbs&#10;adm&#9;FILE&#9;file:///Users/rishabh.t/nodejsProjects/app/expressCart/routes/admin.js&#10;layou&#9;FILE&#9;file:///Users/rishabh.t/nodejsProjects/app/expressCart/views/layouts/layout.hbs&#10;la&#9;FILE&#9;file:///Users/rishabh.t/nodejsProjects/app/expressCart/views/layouts/layout.hbs&#10;admin.js&#9;FILE&#9;file:///Users/rishabh.t/nodejsProjects/app/expressCart/routes/admin.js&#10;Cus&#9;FILE&#9;file:///Users/rishabh.t/nodejsProjects/app/expressCart/classes/services/Indexing/CustomerIndexingService.js" />
     <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="aspect.path.notification.shown" value="true" />
-    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1554837340052" />
+    <property name="com.android.tools.idea.instantapp.provision.ProvisionBeforeRunTaskProvider.myTimeStamp" value="1555244736436" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.standard" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
@@ -739,11 +621,12 @@
       <workItem from="1554552541314" duration="58286000" />
       <workItem from="1554781667940" duration="8891000" />
       <workItem from="1554832316951" duration="4163000" />
+      <workItem from="1555234148892" duration="578000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="420003000" />
+    <option name="totallyTimeSpent" value="422974000" />
   </component>
   <component name="TodoView">
     <todo-panel id="selected-file">
@@ -756,9 +639,8 @@
   </component>
   <component name="ToolWindowManager">
     <frame x="0" y="0" width="1680" height="1050" extended-state="0" />
-    <editor active="true" />
     <layout>
-      <window_info content_ui="combo" x="0" y="45" width="243" height="939" id="Project" order="0" sideWeight="0.4992722" visible="true" weight="0.24908425" />
+      <window_info content_ui="combo" x="0" y="45" width="243" height="939" id="Project" order="0" sideWeight="0.4992722" visible="true" weight="0.25824177" />
       <window_info id="Structure" order="1" sideWeight="0.5007278" side_tool="true" weight="0.2985348" />
       <window_info id="Image Layers" order="2" />
       <window_info id="Designer" order="3" />
@@ -767,8 +649,8 @@
       <window_info id="Favorites" order="6" side_tool="true" weight="0.26984128" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" weight="0.32822084" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.32822084" />
-      <window_info anchor="bottom" id="Debug" order="3" weight="0.28834355" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.32822084" />
+      <window_info active="true" anchor="bottom" id="Debug" order="3" visible="true" weight="0.28834355" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.3291536" />
@@ -1113,11 +995,6 @@
           <option name="timeStamp" value="139" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
-          <url>file://$PROJECT_DIR$/routes/product.js</url>
-          <line>144</line>
-          <option name="timeStamp" value="140" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/classes/UrlService/ProductUrls.js</url>
           <line>22</line>
           <option name="timeStamp" value="144" />
@@ -1134,12 +1011,12 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/classes/services/UserServices.js</url>
-          <line>200</line>
+          <line>198</line>
           <option name="timeStamp" value="150" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/classes/services/UserServices.js</url>
-          <line>53</line>
+          <line>51</line>
           <option name="timeStamp" value="151" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
@@ -1164,7 +1041,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/routes/product.js</url>
-          <line>209</line>
+          <line>208</line>
           <option name="timeStamp" value="159" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
@@ -1544,7 +1421,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/classes/services/UserServices.js</url>
-          <line>133</line>
+          <line>131</line>
           <option name="timeStamp" value="296" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
@@ -1594,7 +1471,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/classes/services/UserServices.js</url>
-          <line>113</line>
+          <line>111</line>
           <option name="timeStamp" value="311" />
         </line-breakpoint>
         <line-breakpoint enabled="true" type="javascript">
@@ -1705,7 +1582,6 @@
         <line-breakpoint enabled="true" type="javascript">
           <url>file://$PROJECT_DIR$/routes/admin.js</url>
           <line>22</line>
-          <properties lambdaOrdinal="-1" />
           <option name="timeStamp" value="342" />
         </line-breakpoint>
       </breakpoints>
@@ -1781,47 +1657,6 @@
     </expressions>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/views/customer.hbs">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/node_modules/on-headers/index.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="222">
-          <caret line="54" column="18" selection-start-line="54" selection-start-column="18" selection-end-line="54" selection-end-column="18" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/views/user_edit.hbs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="218">
-          <caret line="21" column="88" selection-start-line="21" selection-start-column="88" selection-end-line="21" selection-end-column="88" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/node_modules/nodemailer/lib/nodemailer.js">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/classes/RequestProcessor/CustomerRequestProcessor.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="126">
-          <caret line="7" column="17" selection-start-line="7" selection-start-column="17" selection-end-line="7" selection-end-column="17" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/classes/services/FileServices.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="223">
-          <caret line="15" column="17" selection-start-line="15" selection-start-column="17" selection-end-line="15" selection-end-column="17" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/classes/services/validator/UserValidator.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="342">
-          <caret line="19" column="4" selection-start-line="19" selection-start-column="4" selection-end-line="19" selection-end-column="4" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/classes/RequestProcessor/UserRequestProcessor.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="126">
@@ -1888,15 +1723,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/config/default.json">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="257">
-          <caret line="122" column="26" lean-forward="true" selection-start-line="122" selection-start-column="26" selection-end-line="122" selection-end-column="26" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/views/layouts/layout.hbs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="239">
-          <caret line="160" column="17" selection-start-line="160" selection-start-column="17" selection-end-line="160" selection-end-column="31" />
+        <state relative-caret-position="144">
+          <caret line="8" column="73" selection-start-line="8" selection-start-column="73" selection-end-line="8" selection-end-column="73" />
         </state>
       </provider>
     </entry>
@@ -1944,8 +1772,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/classes/utilities/MangoUtils.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="1314">
-          <caret line="73" column="4" selection-start-line="73" selection-start-column="4" selection-end-line="73" selection-end-column="4" />
+        <state relative-caret-position="558">
+          <caret line="31" lean-forward="true" selection-start-line="31" selection-end-line="31" />
         </state>
       </provider>
     </entry>
@@ -1957,24 +1785,10 @@
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/classes/services/RequestProcessor/ProductRequestProcessor.js" />
-    <entry file="file://$PROJECT_DIR$/classes/services/UserServices.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="215">
-          <caret line="53" column="8" selection-start-line="53" selection-start-column="8" selection-end-line="53" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/routes/index.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="205">
           <caret line="542" column="19" selection-start-line="542" selection-start-column="19" selection-end-line="542" selection-end-column="19" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/app.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="467">
-          <caret line="149" column="21" selection-start-line="149" selection-start-column="20" selection-end-line="149" selection-end-column="21" />
         </state>
       </provider>
     </entry>
@@ -1989,13 +1803,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="414">
           <caret line="110" column="33" selection-start-line="110" selection-start-column="33" selection-end-line="110" selection-end-column="33" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/routes/admin.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="215">
-          <caret line="344" column="7" selection-start-line="344" selection-start-column="7" selection-end-line="344" selection-end-column="7" />
         </state>
       </provider>
     </entry>
@@ -2036,36 +1843,23 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/classes/services/Indexing/ProductIndexingService.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="251">
-          <caret line="105" column="4" selection-start-line="105" selection-start-column="4" selection-end-line="105" selection-end-column="4" />
+        <state relative-caret-position="162">
+          <caret line="9" column="8" selection-start-line="9" selection-start-column="8" selection-end-line="9" selection-end-column="8" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/classes/services/ProductService.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="215">
-          <caret line="216" column="20" selection-start-line="216" selection-start-column="20" selection-end-line="216" selection-end-column="20" />
+        <state relative-caret-position="503">
+          <caret line="232" column="13" selection-start-line="232" selection-start-column="13" selection-end-line="232" selection-end-column="13" />
           <folding>
             <element signature="n#!!block;n#ProductLunrIndexing#0;n#ProductService#0" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/classes/UrlService/ProductUrls.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="396">
-          <caret line="22" column="8" selection-start-line="22" selection-start-column="8" selection-end-line="22" selection-end-column="8" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/views/signUp.hbs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <folding>
-            <element signature="n#style#0;n#div#0;n#!!top" expanded="true" />
-          </folding>
-        </state>
-      </provider>
+      <provider selected="true" editor-type-id="text-editor" />
     </entry>
     <entry file="file://$PROJECT_DIR$/routes/customer.js">
       <provider selected="true" editor-type-id="text-editor">
@@ -2085,16 +1879,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="407">
           <caret line="645" column="14" lean-forward="true" selection-start-line="645" selection-start-column="14" selection-end-line="645" selection-end-column="14" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/views/partials/menu.hbs">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="342">
-          <caret line="19" column="49" selection-start-line="19" selection-start-column="49" selection-end-line="19" selection-end-column="49" />
-          <folding>
-            <element signature="e#1644#1650#0#HTML" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -2119,10 +1903,93 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/docker-compose.yml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="486">
+          <caret line="27" selection-start-line="27" selection-end-line="27" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/jsconfig.json">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/classes/utilities/Constants.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="18">
+          <caret line="1" column="4" selection-start-line="1" selection-start-column="4" selection-end-line="1" selection-end-column="4" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Dockerfile">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="378">
+          <caret line="21" column="28" selection-start-line="21" selection-start-column="28" selection-end-line="21" selection-end-column="28" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/package.json">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="846">
+          <caret line="47" column="22" selection-start-line="47" selection-start-column="22" selection-end-line="47" selection-end-column="22" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/node_modules/eslint/lib/config.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="3906">
+          <caret line="217" selection-start-line="217" selection-end-line="217" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/app.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="3222">
+          <caret line="179" column="40" selection-start-line="179" selection-start-column="36" selection-end-line="179" selection-end-column="40" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/views/layouts/layout.hbs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2880">
+          <caret line="160" column="17" selection-start-line="160" selection-start-column="17" selection-end-line="160" selection-end-column="31" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/views/partials/menu.hbs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="432">
+          <caret line="24" selection-start-line="24" selection-end-line="24" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/classes/services/UserServices.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="324">
+          <caret line="18" column="62" selection-start-line="18" selection-start-column="62" selection-end-line="18" selection-end-column="62" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/bin/testdata.json">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/classes/UrlService/ProductUrls.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="486">
+          <caret line="27" column="5" lean-forward="true" selection-start-line="27" selection-start-column="5" selection-end-line="27" selection-end-column="5" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/routes/admin.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="512">
+          <caret line="344" column="7" selection-start-line="344" selection-start-column="7" selection-end-line="344" selection-end-column="7" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/routes/product.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="435">
-          <caret line="70" column="18" selection-start-line="70" selection-start-column="18" selection-end-line="70" selection-end-column="18" />
+        <state relative-caret-position="520">
+          <caret line="260" selection-start-line="260" selection-end-line="260" />
         </state>
       </provider>
     </entry>

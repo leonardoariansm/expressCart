@@ -44,7 +44,8 @@
     "sitemap": "^1.6.0",
     "strip-bom": "^3.0.0",
     "stripe": "^5.10.0",
-    "uglifycss": "0.0.27"
+    "uglifycss": "0.0.27",
+    "config": "^3.1.0"
   },
   "devDependencies": {
     "ava": "^0.25.0",
