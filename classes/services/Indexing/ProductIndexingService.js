@@ -106,6 +106,16 @@ class ProductIndexingService extends IndexingService{
         return result;
     }
 
+    static async deleteProductIndexing(productId){
+        try{
+            let product = await this.getProductsByProductIDs([productId])[0];
+            await this.updateProductIndexing(product, {});
+        }catch(e){
+            console.log(`Error deleteProductIndexing function: ${e.message}`);
+            throw e;
+        }
+    }
+
     static async performProductTitleOperation(searchCriteria){
         let that = this;
         let context = {};
@@ -181,7 +191,7 @@ class ProductIndexingService extends IndexingService{
             await promise.all([
                 this.redisUtils.addToSet(pageNumFilterKey, productIds),
                 this.redisUtils.expireKey(pageNumFilterKey, 300)
-            ])
+            ]);
             context.intersectionSet.push(pageNumFilterKey);
         }
         return context;

@@ -125,7 +125,10 @@ class ProductService{
 
     static async deleteProduct(req, res, productId){
         try{
-            await this.productDataStores.deleteProduct(req, res, productId);
+            await promise.all([
+                this.productDataStores.deleteProduct(req, res, productId),
+                this.productIndexingService.deleteProductIndexing(productId)
+            ]);
         }catch(e){
             console.log(`Error deleteProduct function: ${e.message}`);
             throw e;
