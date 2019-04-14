@@ -241,16 +241,21 @@ class ProductService{
     }
 
     static async deleteProduct(req, res, productId){
-        let tasks = [];
-        let userId = (req.session.user && req.session.user.userId);
-        let multi = this.redisUtils.queueSuccessiveCommands();
-        this.redisUtils.removeToSet(this.redisKeys.getUserToUserProductsMapping(userId), productId, multi);
-        this.redisUtils.delete(this.redisKeys.getProductPermaLinkRediskey(productId), multi);
-        this.redisUtils.delete(this.redisKeys.getProductDetailsRedisKey(productId), multi);
-        this.redisUtils.removeToSortedSet(this.redisKeys.getProductRedisKey(), productId, multi);
-        tasks.push(this.mangoUtils.deleteDocument({productId: productId}, this.enums.productCollectionName));
-        tasks.push(this.redisUtils.executeQueuedCommands(multi));
-        await promise.all(tasks);
+        try{
+            let tasks = [];
+            let userId = req.session && req.session.user && req.session.user.userId;
+            let multi = this.redisUtils.queueSuccessiveCommands();
+            this.redisUtils.removeToSet(this.redisKeys.getUserToUserProductsMapping(userId), productId, multi);
+            this.redisUtils.delete(this.redisKeys.getProductPermaLinkRediskey(productId), multi);
+            this.redisUtils.delete(this.redisKeys.getProductDetailsRedisKey(productId), multi);
+            this.redisUtils.removeToSortedSet(this.redisKeys.getProductRedisKey(), productId, multi);
+            tasks.push(this.mangoUtils.deleteDocument({productId: productId}, this.enums.productCollectionName));
+            tasks.push(this.redisUtils.executeQueuedCommands(multi));
+            await promise.all(tasks);
+        }catch(e){
+            console.log(`Error deleteProduct function: ${e}`);
+            throw e;
+        }
     }
 
     static getUpdatedProduct(rawRequestProduct, currentProduct){
