@@ -94,7 +94,7 @@ router.post('/admin/product/insert', common.restrict, async (req, res) => {
         req.session.product = product;
         req.session.message = Enums.PRODUCT_SUCCESSFULLY_INSERTED;
         req.session.messageType = Enums.SUCCESS;
-        res.redirect(ProductUrls.getUrlToEditProduct(product.productId));
+        res.redirect(`/admin/product/edit/:${product.productId}`);
     }catch(err){
         switch(err.message){
             case Enums.INVALID_PRODUCT_DETAILS:
@@ -109,7 +109,7 @@ router.post('/admin/product/insert', common.restrict, async (req, res) => {
         req.session.messageType = Enums.DANGER;
         req.session.product = ProductRequestProcessor.getRawRequestProduct(req, res);
         // redirect to insert
-        res.redirect(ProductUrls.getUrlToAddNewProduct());
+        res.redirect('/admin/product/new');
     }
 });
 
@@ -139,16 +139,15 @@ router.get('/admin/product/edit/:id', common.restrict, (req, res) => {
 
 // Update an existing product form action
 router.post('/admin/product/update', common.restrict, async (req, res) => {
+    let redirectUrl = `/admin/product/edit/:${req.session.product.productId}`;
     try{
         let productId = req.body.frmProductId;
         let product = await ProductService.updateProduct(req, res, productId);
-        let redirectUrl = ProductUrls.getUrlToEditProduct(product.productId);
         req.session.message = Enums.PRODUCT_SUCCESSFULLY_SAVED;
         req.session.messageType = Enums.SUCCESS;
         req.session.product = common.clearSessionValue(req.session, 'product');
         res.redirect(redirectUrl);
     }catch(err){
-        let redirectUrl = ProductUrls.getUrlToEditProduct(req.session.productId);
         switch(err.message){
             case Enums.INVALID_PRODUCT_DETAILS:
                 req.session.message = Enums.INVALID_PRODUCT_DETAILS;
@@ -156,7 +155,7 @@ router.post('/admin/product/update', common.restrict, async (req, res) => {
             case Enums.PRODUCT_NOT_EXISTS:
                 req.session.message = Enums.PRODUCT_ID_INVALID;
                 req.session.product = common.clearSessionValue(req.session, 'product');
-                redirectUrl = ProductUrls.getUrlToAddNewProduct();
+                redirectUrl = '/admin/product/new';
                 break;
             case Enums.PRODUCT_PERMALINK_ALREADY_EXIST:
                 req.session.message = Enums.PRODUCT_PERMALINK_ALREADY_EXIST_MESSAGE;
@@ -179,11 +178,11 @@ router.get('/admin/product/delete/:id', common.restrict, async (req, res) => {
         req.session.message = Enums.PRODUCT_SUCCESSFULLY_DELETED;
         req.session.messageType = Enums.SUCCESS;
         common.clearSessionValue(req.session, 'product');
-        res.redirect(ProductUrls.getUrlToAllProducts());
+        res.redirect('/admin/products');
     }catch(err){
         req.session.message = Enums.ERROR_PRODUCT_DELETION;
         req.session.messageType = Enums.DANGER;
-        res.redirect(ProductUrls.getUrlToAllProducts());
+        res.redirect('/admin/products');
         throw err;
     }
 });
