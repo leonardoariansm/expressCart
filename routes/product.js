@@ -94,7 +94,7 @@ router.post('/admin/product/insert', common.restrict, async (req, res) => {
         req.session.product = product;
         req.session.message = Enums.PRODUCT_SUCCESSFULLY_INSERTED;
         req.session.messageType = Enums.SUCCESS;
-        res.redirect(`/admin/product/edit/:${product.productId}`);
+        res.redirect(`/admin/product/edit/${product.productId}`);
     }catch(err){
         switch(err.message){
             case Enums.INVALID_PRODUCT_DETAILS:
@@ -139,7 +139,7 @@ router.get('/admin/product/edit/:id', common.restrict, (req, res) => {
 
 // Update an existing product form action
 router.post('/admin/product/update', common.restrict, async (req, res) => {
-    let redirectUrl = `/admin/product/edit/:${req.session.product.productId}`;
+    let redirectUrl = `/admin/product/edit/${req.session.product.productId}`;
     try{
         let productId = req.body.frmProductId;
         let product = await ProductService.updateProduct(req, res, productId);
