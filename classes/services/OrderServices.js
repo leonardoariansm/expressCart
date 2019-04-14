@@ -7,6 +7,7 @@ const RedisKeys = require('../Redis/RedisKeys');
 const RedisUtils = require('../Redis/RedisUtils');
 const MangoUtils = require('../utilities/MangoUtils');
 const{ProductService} = require('./ProductService');
+const{ProductDataStores} = require('../DataStores/ProductDataStores');
 const StaticFunctions = require('../utilities/staticFunctions');
 const{OrderIndexingService} = require('./Indexing/OrderIndexingService');
 const{OrderRequestProcessor} = require('../RequestProcessor/OrderRequestProcessor');
@@ -21,6 +22,7 @@ class OrderServices{
         this.orderIndexingService = OrderIndexingService;
         this.orderRequestProcessor = OrderRequestProcessor;
         this.productService = ProductService;
+        this.productDataStores = ProductDataStores;
     }
 
     static async getOrdersByOrderIds(orderIds){
@@ -76,7 +78,7 @@ class OrderServices{
                 productIds.push(order.orderProducts[k]);
                 productsQuantity.push(order.orderProducts[k + 1]);
             }
-            order.orderProducts = await this.productService.getProductByProductIDs(productIds);
+            order.orderProducts = await this.productDataStores.getProductByProductIDs(productIds);
             for(let key in productsQuantity){
                 order.orderProducts[key].title = order.orderProducts[key].productTitle;
                 order.orderProducts[key].totalItemPrice = parseFloat(productsQuantity[key]) * order.orderProducts[key].productPrice;

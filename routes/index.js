@@ -12,6 +12,7 @@ const{ProductService} = require('../classes/services/ProductService');
 const{OrderServices} = require('../classes/services/OrderServices');
 const{PageServices} = require('../classes/services/PageServices');
 const{AdminServices} = require('../classes/services/AdminServices');
+const{ProductDataStores} = require('../classes/DataStores/ProductDataStores');
 const{ProductIndexingService} = require('../classes/services/Indexing/ProductIndexingService');
 
 // These is the customer facing routes
@@ -27,13 +28,13 @@ router.get('/payment/:orderId', async (req, res, next) => {
         // If stock management is turned on payment approved update stock level
         if(config.trackStock && order.orderStatus === 'Paid' && req.session.paymentApproved){
             order.orderProducts.forEach(async (product) => {
-                const dbProduct = await ProductService.getProductByProductID(product.productId);
+                const dbProduct = await ProductDataStores.getProductByProductID(product.productId);
                 let newStockLevel = dbProduct.productStock - product.quantity;
                 if(newStockLevel < 1){
                     newStockLevel = 0;
                 }
                 product.productStock = newStockLevel;
-                await ProductService.updateProduct(product.productId);
+                await ProductService.updateProduct(req, res, product.productId);
             });
         }
         common.clearSessionValue(req.session, 'totalCartItems');
@@ -135,8 +136,8 @@ router.get('/product/:id', async (req, res) => {
             throw Error(Enums.PRODUCT_ID_INVALID);
         }
         let result = await promise.all([
-            ProductService.getProductByProductID(productSearchId),
-            ProductService.getProductByProductPermalink(productSearchId),
+            ProductDataStores.getProductByProductID(productSearchId),
+            ProductDataStores.getProductByProductPermalink(productSearchId),
             AdminServices.getMenu(req, res)
         ]);
         let product = (staticFunctions.isNotEmpty(result) && result.length > 1) ? (result[0] || result[1]) : null;
@@ -193,7 +194,7 @@ router.post('/product/updatecart', async (req, res, next) => {
                     req.session.cart.splice(cartItem.cartIndex, 1);
                     resolve(1);
                 }
-                let product = await ProductService.getProductByProductID(cartItem.productId);
+                let product = await ProductDataStores.getProductByProductID(cartItem.productId);
                 if(staticFunctions.isEmpty(product)){
                     req.session.cart.splice(cartItem.cartIndex, 1);
                     resolve(1);
@@ -289,7 +290,7 @@ router.post('/product/addtocart', async (req, res, next) => {
             req.session.cart = [];
         }
 
-        let product = await ProductService.getProductByProductID(productId);
+        let product = await ProductDataStores.getProductByProductID(productId);
         if(staticFunctions.isEmpty(product)){
             throw Error(Enums.PRODUCT_ID_INVALID);
         }

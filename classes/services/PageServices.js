@@ -13,23 +13,6 @@ class PageServices{
         this.productService = ProductService;
     }
 
-    static getKeyValuesUserPairArray(Pages){
-        return new promise((resolve, reject) => {
-            let redisKeysValues = {};
-            Pages.find({}).toArray((err, PagesList) => {
-                if(err){
-                    console.error(colors.red(err.stack));
-                    reject(err);
-                }
-                PagesList.forEach((Page) => {
-                    let PageId = Page.PageId;
-                    redisKeysValues[RedisKeys.getPageDetailsRedisKeys(PageId)] = JSON.stringify(Page);
-                });
-            });
-            resolve(redisKeysValues);
-        });
-    }
-
     static async getPage (req, res, page, isPublicRoute){
         if(this.staticFunctions.isEmpty(page) || typeof page !== 'number'){
             throw Error(this.enums.INVALID_PAGE);
