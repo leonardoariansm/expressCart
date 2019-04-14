@@ -174,7 +174,7 @@ router.get('/admin/product/delete/:id', common.restrict, async (req, res) => {
     try{
         // image deleting logic not written
         let productId = req.params.id;
-        await ProductService.deleteProduct(productId);
+        await ProductService.deleteProduct(req, res, productId);
         req.session.message = Enums.PRODUCT_SUCCESSFULLY_DELETED;
         req.session.messageType = Enums.SUCCESS;
         common.clearSessionValue(req.session, 'product');
