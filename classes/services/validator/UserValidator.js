@@ -1,5 +1,5 @@
 const promise = require('bluebird');
-const StaticFunctions = require('../../utilities/StaticFunctions');
+const StaticFunctions = require('../../utilities/staticFunctions');
 
 class UserValidator{
     static injectStaticDependencies(){
