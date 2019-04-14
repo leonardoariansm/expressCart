@@ -140,7 +140,8 @@ router.get('/product/:id', async (req, res) => {
             ProductDataStores.getProductByProductPermalink(productSearchId),
             AdminServices.getMenu(req, res)
         ]);
-        let product = (staticFunctions.isNotEmpty(result) && result.length > 1) ? (result[0] || result[1]) : null;
+        let product = result[0];
+        if(staticFunctions.isEmpty(product)) product = staticFunctions.isEmpty(result[1]) ? null : result[1];
         let menu = result[2];
         if(staticFunctions.isEmpty(product)){
             throw Error(Enums.PRODUCT_ID_INVALID);
