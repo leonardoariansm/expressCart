@@ -2,6 +2,12 @@ const common = require('../../lib/common');
 const StaticFunctions = require('../utilities/staticFunctions');
 
 class Product{
+
+    static injectStaticDependencies() {
+        this.staticFunctions = StaticFunctions;
+        this.redisUtils
+    }
+
     static getProduct(rawRequestProduct, currentProduct){
         let product = {
                 productId: rawRequestProduct.productId,
@@ -14,9 +20,29 @@ class Product{
                 productOptions: StaticFunctions.getNonEmptyValue([common.cleanHtml(rawRequestProduct.productOptions), currentProduct.productOptions]),
                 productComment: StaticFunctions.getNonEmptyValue([common.checkboxBool(rawRequestProduct.productComment), currentProduct.productComment]),
                 productAddedDate: StaticFunctions.getNonEmptyValue([currentProduct.productAddedDate, new Date()]),
-                productStock: StaticFunctions.getNonEmptyValue([rawRequestProduct.productStock ? parseInt(rawRequestProduct.frmProductStock) : null, currentProduct.productStock])
+                productStock: StaticFunctions.getNonEmptyValue([(rawRequestProduct.productStock ? parseInt(rawRequestProduct.frmProductStock) : null), currentProduct.productStock]),
+                productImage: StaticFunctions.getNonEmptyValue([rawRequestProduct.productImage, currentProduct.productImage])
         };
         return product;
+    }
+
+    static async getProductByProductID(productId){
+        try{
+            if(this.staticFunctions.isEmpty(productId)){
+                throw Error(this.enums.PRODUCT_ID_INVALID);
+            }
+            let multi = this.redisUtils.queueSuccessiveCommands();
+            this.redisUtils.getSortedSetScoreByMember(this.redisKeys.getProductRedisKey(), productId, multi);
+            this.redisUtils.getAllValueFromHash(this.redisKeys.getProductDetailsRedisKey(productId), multi);
+            let result = await this.redisUtils.executeQueuedCommands(multi);
+            if(this.staticFunctions.isNotEmpty(result) && result.length > 1 && this.staticFunctions.isNotEmpty(result[0])){
+                return result[1];
+            }
+            return null;
+        }catch(e){
+            console.log('Error: getProductByProductID fetching');
+            throw e;
+        }
     }
 }
 

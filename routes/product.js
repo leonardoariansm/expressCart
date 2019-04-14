@@ -203,59 +203,29 @@ router.post('/admin/product/published_state', common.restrict, async (req, res) 
 });
 
 // set as main product image
-// router.post('/admin/product/setasmainimage', common.restrict, common.checkAccess, async (req, res) => {
-//     try{
-//         // image saving logic not present
-//         let productId = req.session.product && req.session.product.productId;
-//         if(StaticFunctions.isEmpty(productId)){ throw Error(Enums.PRODUCT_ID_INVALID); }
-//         await ProductService.updateProduct(req, res, productId);
-//         res.status(200).json({message: 'Main image successfully set'});
-//     }catch(err){
-//         switch(err.message){
-//             case Enums.PRODUCT_ID_INVALID:
-//                 res.redirect(ProductUrls.getUrlToAddNewProduct());
-//                 break;
-//             default:
-//                 res.status(400).json({message: 'Unable to set as main image. Please try again.'});
-//         }
-//     }
-// });
+router.post('/admin/product/setasmainimage', common.restrict, common.checkAccess, async (req, res) => {
+    try{
+        await ProductService.setProductImage(req, res);
+        res.status(200).json({message: 'Main image successfully set'});
+    }catch(err){
+        switch(err.message){
+            case Enums.PRODUCT_ID_INVALID:
+                res.redirect('/admin/product/new');
+                break;
+            default:
+                res.status(400).json({message: 'Unable to set as main image. Please try again.'});
+        }
+    }
+});
 
 // deletes a product image
-// router.post('/admin/product/deleteimage', common.restrict, common.checkAccess, (req, res) => {
-//     const db = req.app.db;
-//
-//     // get the productImage from the db
-//     db.products.findOne({_id: common.getId(req.body.product_id)}, (err, product) => {
-//         if(err){
-//             console.info(err.stack);
-//         }
-//         if(req.body.productImage === product.productImage){
-//             // set the produt_image to null
-//             db.products.update({_id: common.getId(req.body.product_id)}, {$set: {productImage: null}}, {multi: false}, (err, numReplaced) => {
-//                 if(err){
-//                     console.info(err.stack);
-//                 }
-//                 // remove the image from disk
-//                 fs.unlink(path.join('public', req.body.productImage), (err) => {
-//                     if(err){
-//                         res.status(400).json({message: 'Image not removed, please try again.'});
-//                     }else{
-//                         res.status(200).json({message: 'Image successfully deleted'});
-//                     }
-//                 });
-//             });
-//         }else{
-//             // remove the image from disk
-//             fs.unlink(path.join('public', req.body.productImage), (err) => {
-//                 if(err){
-//                     res.status(400).json({message: 'Image not removed, please try again.'});
-//                 }else{
-//                     res.status(200).json({message: 'Image successfully deleted'});
-//                 }
-//             });
-//         }
-//     });
-// });
+router.post('/admin/product/deleteimage', common.restrict, common.checkAccess, async (req, res) => {
+    try{
+        await ProductService.deleteProductImage(req, res);
+        res.status(200).json({message: 'Image successfully deleted'});
+    }catch(err){
+        res.status(400).json({message: 'Image not removed, please try again.'});
+    }
+});
 
 module.exports = router;

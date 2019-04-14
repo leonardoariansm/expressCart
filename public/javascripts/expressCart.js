@@ -602,7 +602,7 @@ $(document).ready(function (){
         $.ajax({
             method: 'POST',
             url: '/admin/product/setasmainimage',
-            data: {product_id: $('#frmProductId').val(), productImage: $(this).attr('data-id')}
+            data: {frmProductId: $('#frmProductId').val(), frmProductImage: $(this).attr('data-id')}
         })
 		.done(function(msg){
             showNotification(msg.message, 'success', true);
@@ -616,7 +616,7 @@ $(document).ready(function (){
         $.ajax({
             method: 'POST',
             url: '/admin/product/deleteimage',
-            data: {product_id: $('#frmProductId').val(), productImage: $(this).attr('data-id')}
+            data: {frmProductId: $('#frmProductId').val(), frmProductImage: $(this).attr('data-id')}
         })
 		.done(function(msg){
             showNotification(msg.message, 'success', true);

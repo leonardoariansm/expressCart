@@ -19,7 +19,26 @@ class ProductRequestProcessor{
             productOptions: common.cleanHtml(req.body.frmProductOptions),
             productComment: common.checkboxBool(req.body.frmProductComment),
             productAddedDate: new Date(),
-            productStock: req.body.frmProductStock ? parseInt(req.body.frmProductStock) : 0
+            productStock: req.body.frmProductStock ? parseInt(req.body.frmProductStock) : 0,
+            productImage: req.body.frmProductImage
+        };
+        return product;
+    }
+
+    static getUpdatedProduct(rawRequestProduct, currentProduct){
+        let product = {
+            productId: rawRequestProduct.productId,
+            productPermalink: StaticFunctions.getNonEmptyValue([rawRequestProduct.productPermalink, currentProduct.productPermalink]),
+            productTitle: StaticFunctions.getNonEmptyValue([rawRequestProduct.productTitle, currentProduct.productTitle]),
+            productPrice: parseInt(StaticFunctions.getNonEmptyValue([rawRequestProduct.productPrice, currentProduct.productPrice])),
+            productPublished: StaticFunctions.getNonEmptyValue([rawRequestProduct.productPublished, currentProduct.productPublished]),
+            productDescription: StaticFunctions.getNonEmptyValue([rawRequestProduct.productDescription, currentProduct.productDescription]),
+            productTags: StaticFunctions.getNonEmptyValue([rawRequestProduct.productTags, currentProduct.productTags]),
+            productOptions: StaticFunctions.getNonEmptyValue([common.cleanHtml(rawRequestProduct.productOptions), currentProduct.productOptions]),
+            productComment: StaticFunctions.getNonEmptyValue([common.checkboxBool(rawRequestProduct.productComment), currentProduct.productComment]),
+            productAddedDate: StaticFunctions.getNonEmptyValue([currentProduct.productAddedDate, new Date()]),
+            productStock: StaticFunctions.getNonEmptyValue([(rawRequestProduct.productStock ? parseInt(rawRequestProduct.frmProductStock) : null), currentProduct.productStock]),
+            productImage: StaticFunctions.getNonEmptyValue([rawRequestProduct.productImage, currentProduct.productImage])
         };
         return product;
     }

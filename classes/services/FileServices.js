@@ -4,13 +4,13 @@ const path = require('path');
 const config = require('config');
 const promise = require('bluebird');
 const mime = require('mime-type/with-db');
-const{ProductService} = require('./ProductService');
+const{ProductDataStores} = require('../DataStores/ProductDataStores');
 
 const uploadDir = config.get('products.productImageUploadDir');
 
 class FileServices{
     static injectStaticDependencies(){
-        this.productService = ProductService;
+        this.productDataStores = ProductDataStores;
     }
 
     static async getAllFiles(){
@@ -49,7 +49,7 @@ class FileServices{
             fs.unlinkSync(file.path);
             return promise.reject(false);
         }
-        let product = await this.productService.getProductByProductID(req.body.productId);
+        let product = await this.productDataStores.getProductByProductID(req.body.frmProductId);
         const productPath = product.productPermalink;
         const uploadDir = path.join('public', 'uploads', productPath);
         common.checkDirectorySync(uploadDir);
@@ -63,7 +63,7 @@ class FileServices{
                     let imagePath = path.join('uploads', productPath, file.originalname.replace(/ /g, '_'));
                     if(!product.productImage){
                         product.productImage = imagePath;
-                        await this.productService.updateProduct(req, res, product.productId, product);
+                        await this.productService.setProductImage(req, res, product.productId, product);
                     }
                     resolve(true);
                 }catch(e){
@@ -75,7 +75,7 @@ class FileServices{
     }
 
     static async removeFile(req, res){
-        let imagePath = path.join('public', req.body.img);
+        let imagePath = path.join('public', req.body.frmProductImage);
         let result = await new promise((resolve, reject) => {
             fs.unlink(imagePath, (err) => {
                 if(err){

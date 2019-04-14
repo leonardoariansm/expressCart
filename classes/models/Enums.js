@@ -13,6 +13,7 @@ let Enums = {
     PRODUCT_PERMALINK_EMPTY: 'PRODUCT_PERMALINK_EMPTY',
     PRODUCT_PERMALINK_EMPTY_MESSAGE: 'please input non empty permalink',
     PRODUCT_ID_INVALID: 'PRODUCT_ID_INVALID',
+    PRODUCT_IMAGE_EMPTY: 'EMPTY PRODUCT IMAGE',
     PRODUCT_SUCCESSFULLY_SAVED: 'Successfully saved',
     PRODUCT_SUCCESSFULLY_INSERTED: 'product successfully inserted',
     PRODUCT_PERMALINK_SUCCESSFULLY_VALIDATED: 'product permalink successfully validated',
