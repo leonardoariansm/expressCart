@@ -71,8 +71,8 @@ class CustomerService{
             let tasks = [];
             let multi = this.redisUtils.queueSuccessiveCommands();
             this.redisUtils.setValueInSortedSet(this.redisKeys.getCustomerRedisKeys(), currentTimeInMs, customer.customerId, multi);
-            this.redisUtils.set(this.redisKeys.getCustomerIdAndEmailMappingKey(customer.email), customer.customerId, multi);
-            this.redisUtils.set(this.redisKeys.getCustomerIdAndPhoneNoMappingKey(customer.phone), customer.customerId, multi);
+            this.redisUtils.set(this.redisKeys.getCustomerIdAndEmailMappingKey(customer.email), customer.customerId, -1, multi);
+            this.redisUtils.set(this.redisKeys.getCustomerIdAndPhoneNoMappingKey(customer.phone), customer.customerId, -1, multi);
             this.redisUtils.setMultipleValuesInHash(this.redisKeys.getCustomerDetailsKey(customer.customerId), customer, multi);
             tasks.push(this.redisUtils.executeQueuedCommands(multi));
             tasks.push(this.mangoUtils.insert(customer, this.enums.customerCollectionName));
@@ -93,7 +93,7 @@ class CustomerService{
             let tasks = [];
             let multi = this.redisUtils.queueSuccessiveCommands();
             this.redisUtils.delete(this.redisKeys.getCustomerIdAndEmailMappingKey(currentEmail), multi);
-            this.redisUtils.set(this.redisKeys.getCustomerIdAndEmailMappingKey(email), customerId, multi);
+            this.redisUtils.set(this.redisKeys.getCustomerIdAndEmailMappingKey(email), customerId, -1, multi);
             this.redisUtils.setValueInHash(this.redisKeys.getCustomerDetailsKey(customerId), 'email', email, multi);
             tasks.push(this.redisUtils.executeQueuedCommands(multi));
             tasks.push(this.mangoUtils.updateDocument({customerId: customerId}, {email: email}, this.enums.customerCollectionName));
