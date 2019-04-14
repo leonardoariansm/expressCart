@@ -151,8 +151,6 @@ class ProductService{
             if(this.staticFunctions.isEmpty(productScore)){
                 throw this.enums.PRODUCT_NOT_EXISTS;
             }
-            let currentProduct = await this.productDataStores.getProductByProductID(productId);
-            let updatedProduct = this.getUpdatedProduct(rawRequestProduct, currentProduct);
             await this.productDataStores.setProductProperty(productId, {'productImage': productImage});
         }catch(e){
             console.log(`Error setProductImage function: ${e.message}`);

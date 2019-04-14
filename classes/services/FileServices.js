@@ -63,7 +63,7 @@ class FileServices{
                     let imagePath = path.join('uploads', productPath, file.originalname.replace(/ /g, '_'));
                     if(!product.productImage){
                         product.productImage = imagePath;
-                        await this.productService.setProductImage(req, res, product.productId, product);
+                        await this.productDataStores.setProductProperty(product.productId, {productImage: product.productImage});
                     }
                     resolve(true);
                 }catch(e){
