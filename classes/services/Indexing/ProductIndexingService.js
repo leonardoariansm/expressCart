@@ -13,7 +13,7 @@ class ProductIndexingService extends IndexingService{
 
     static async indexOrder(product){
         let multi = this.redisUtils.queueSuccessiveCommands();
-        promise.all([
+        await promise.all([
             this.productTitleIndexing(product, {}, multi),
             this.productTagsIndexing(product, {}, multi),
             this.productDescriptionIndexing(product, {}, multi)
@@ -106,9 +106,8 @@ class ProductIndexingService extends IndexingService{
         return result;
     }
 
-    static async deleteProductIndexing(productId){
+    static async deleteProductIndexing(product){
         try{
-            let product = await this.getProductsByProductIDs([productId])[0];
             await this.updateProductIndexing(product, {});
         }catch(e){
             console.log(`Error deleteProductIndexing function: ${e.message}`);
@@ -244,15 +243,19 @@ class ProductIndexingService extends IndexingService{
     }
 
     static async getProductsByProductIDs(productIds){
-        if(this.staticFunctions.isEmpty(productIds)){
-            throw Error(this.enums.PRODUCT_ID_INVALID);
+        try{
+            if(this.staticFunctions.isEmpty(productIds)){
+                throw Error(this.enums.PRODUCT_ID_INVALID);
+            }
+            let multi = this.redisUtils.queueSuccessiveCommands();
+            for(let productId of productIds){
+                this.redisUtils.getAllValueFromHash(this.redisKeys.getProductDetailsRedisKey(productId), multi);
+            }
+            return await this.redisUtils.executeQueuedCommands(multi);
+        }catch(e){
+            console.log(`Error getProductsByProductIDs function: ${e.message}`);
+            throw e;
         }
-        let multi = this.redisUtils.queueSuccessiveCommands();
-        for(let productId of productIds){
-            this.redisUtils.getAllValueFromHash(this.redisKeys.getProductDetailsRedisKey(productId), multi);
-        }
-        let products = await this.redisUtils.executeQueuedCommands(multi);
-        return products;
     }
 }
 

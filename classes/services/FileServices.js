@@ -74,8 +74,8 @@ class FileServices{
         return result;
     }
 
-    static async removeFile(req, res){
-        let imagePath = path.join('public', req.body.frmProductImage);
+    static async removeFile(req, res, image){
+        let imagePath = (image !== null && image !== undefined) ? image : path.join('public', req.body.frmProductImage);
         let result = await new promise((resolve, reject) => {
             fs.unlink(imagePath, (err) => {
                 if(err){
