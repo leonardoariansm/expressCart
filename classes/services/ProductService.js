@@ -240,7 +240,7 @@ class ProductService{
         }
     }
 
-    static async deleteProduct(productId){
+    static async deleteProduct(req, res, productId){
         let tasks = [];
         let userId = (req.session.user && req.session.user.userId);
         let multi = this.redisUtils.queueSuccessiveCommands();
