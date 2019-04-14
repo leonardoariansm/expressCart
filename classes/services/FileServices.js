@@ -49,7 +49,7 @@ class FileServices{
             fs.unlinkSync(file.path);
             return promise.reject(false);
         }
-        let product = await this.productDataStores.getProductByProductID(req.body.frmProductId);
+        let product = await this.productDataStores.getProductByProductID(req.body.productId);
         const productPath = product.productPermalink;
         const uploadDir = path.join('public', 'uploads', productPath);
         common.checkDirectorySync(uploadDir);
