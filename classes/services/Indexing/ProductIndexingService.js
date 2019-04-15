@@ -16,7 +16,7 @@ class ProductIndexingService extends IndexingService{
         await promise.all([
             this.productTitleIndexing(product, {}, multi),
             this.productTagsIndexing(product, {}, multi),
-            this.productDescriptionIndexing(product, {}, multi)
+            // this.productDescriptionIndexing(product, {}, multi)
         ]);
         await this.redisUtils.executeQueuedCommands(multi);
         console.log(colors.cyan('- Product indexing complete'));
@@ -98,7 +98,7 @@ class ProductIndexingService extends IndexingService{
             tasks.push(this.productTagsIndexing(newProduct, currentProduct, multi));
         }
         if(currentProduct.productDescription !== newProduct.productDescription){
-            tasks.push(this.productDescriptionIndexing(newProduct, currentProduct, multi));
+            // tasks.push(this.productDescriptionIndexing(newProduct, currentProduct, multi));
         }
         await promise.all(tasks);
         let result = await this.redisUtils.executeQueuedCommands(multi);
@@ -200,7 +200,7 @@ class ProductIndexingService extends IndexingService{
         let pendingPromise = [];
         pendingPromise.push(this.performProductTitleOperation(searchCriteria));
         pendingPromise.push(this.performProductTagOperation(searchCriteria));
-        pendingPromise.push(this.performProductDescriptionOperation(searchCriteria));
+        // pendingPromise.push(this.performProductDescriptionOperation(searchCriteria));
         pendingPromise.push(this.performPageNumOperation(searchCriteria));
         let result = await promise.all(pendingPromise);
         return result;
