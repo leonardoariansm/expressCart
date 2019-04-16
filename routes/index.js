@@ -488,7 +488,7 @@ router.get('/category/:cat/:pageNum?', (req, res) => {
 
 router.get('/page/:pageNum', async (req, res, next) => {
     try{
-        let page = staticFunctions.isNotEmpty(req.params.pageNum) ? req.params.pageNum : 0;
+        let page = staticFunctions.isNotEmpty(req.params.pageNum) ? req.params.pageNum : 1;
         let result = await promise.all([
             PageServices.getPage(req, res, page, true),
             AdminServices.getMenu(req, res)
@@ -542,7 +542,7 @@ router.get('/page/:pageNum', async (req, res, next) => {
 // The main entry point of the shop
 router.get('/:page?', async (req, res, next) => {
     try{
-        let page = staticFunctions.isNotEmpty(req.params.page) ? req.params.page : 0;
+        let page = staticFunctions.isNotEmpty(req.params.page) ? req.params.page : 1;
         if(page === 'admin'){
             next();
             return;

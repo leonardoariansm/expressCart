@@ -16,8 +16,8 @@ class PageServices{
         if(this.staticFunctions.isEmpty(page)){
             throw Error(this.enums.INVALID_PAGE);
         }
-        page = isNaN(parseInt(page)) ? 0 : parseInt(page);
-        let skipProduct = Math.max(page, 0) * config.get('products.productsPerPage');
+        page = isNaN(parseInt(page)) ? 1 : parseInt(page);
+        let skipProduct = Math.max(page - 1, 0) * config.get('products.productsPerPage');
         return await this.productService.getLatestAddedProduct(req, res, skipProduct, isPublicRoute);
     }
 

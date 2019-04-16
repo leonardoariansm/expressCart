@@ -165,21 +165,33 @@ $(document).ready(function (){
         searchTerm = searchTerm + '/';
     }
 
-    var pagerHref = '/' + paginateUrl + '/' + searchTerm + '{{number}}';
     var totalProducts = 10;
-
-    if(parseInt(productCount) > parseInt(pageLen)){
+    if(parseInt(productCount) >= parseInt(pageLen)){
         $('#pager').bootpag({
-            total: totalProducts,
-            page: pageNum,
-            maxVisible: 5,
-            href: pagerHref,
+            total: totalProducts,          // total pages
+            page: pageNum,            // default page
+            maxVisible: 5,     // visible pagination
+            leaps: true,         // next/prev leaps through maxVisible
             wrapClass: 'pagination',
             prevClass: 'waves-effect',
             nextClass: 'waves-effect',
             activeClass: 'pag-active waves-effect'
+        }).on('page', function(event, num){
+            var pagerHref = '/' + paginateUrl + '/' + searchTerm + num;
+            window.location.href = pagerHref;
         });
     }
+
+    // $('#pager').bootpag({
+    //     total: totalProducts,
+    //     page: pageNum,
+    //     maxVisible: 5,
+    //     href: pagerHref,
+    //     wrapClass: 'pagination',
+    //     prevClass: 'waves-effect',
+    //     nextClass: 'waves-effect',
+    //     activeClass: 'pag-active waves-effect'
+    // });
 
     $(document).on('click', '#btnPageUpdate', function(e){
         e.preventDefault();
