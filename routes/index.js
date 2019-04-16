@@ -503,7 +503,7 @@ router.get('/page/:pageNum', async (req, res, next) => {
             res.status(200).json(products);
             return;
         }
-        res.render(`${themeViews}index`, {
+        res.render(`${themeViews}/index`, {
             title: 'Shop',
             results: products,
             session: req.session,

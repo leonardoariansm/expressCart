@@ -1,5 +1,4 @@
 let RedisKeys = require('../Redis/RedisKeys');
-let promise = require('bluebird');
 let Enums = require('../models/Enums');
 let config = require('config');
 let{ProductService} = require('./ProductService');
@@ -14,12 +13,12 @@ class PageServices{
     }
 
     static async getPage (req, res, page, isPublicRoute){
-        if(this.staticFunctions.isEmpty(page) || typeof page !== 'number'){
+        if(this.staticFunctions.isEmpty(page)){
             throw Error(this.enums.INVALID_PAGE);
         }
-        let skipProduct = Math.max(page - 1, 0) * config.get('products.productsPerPage');
-        let products = await this.productService.getLatestAddedProduct(req, res, skipProduct, isPublicRoute);
-        return products;
+        page = isNaN(parseInt(page)) ? 0 : parseInt(page);
+        let skipProduct = Math.max(page, 0) * config.get('products.productsPerPage');
+        return await this.productService.getLatestAddedProduct(req, res, skipProduct, isPublicRoute);
     }
 
     static async getAllPages(){
