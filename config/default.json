@@ -10,7 +10,7 @@
   },
   "products" : {
     "productsPerRow": 3,
-    "productsPerPage": 6,
+    "productsPerPage": 9,
     "protocol": "http",
     "host": "localhost",
     "port": "1111",
