@@ -4,6 +4,7 @@ const path = require('path');
 const config = require('config');
 const promise = require('bluebird');
 const mime = require('mime-type/with-db');
+const Enums = require('../models/Enums');
 const{ProductDataStores} = require('../DataStores/ProductDataStores');
 
 const uploadDir = config.get('products.productImageUploadDir');
@@ -11,6 +12,7 @@ const uploadDir = config.get('products.productImageUploadDir');
 class FileServices{
     static injectStaticDependencies(){
         this.productDataStores = ProductDataStores;
+        this.enums = Enums;
     }
 
     static async getAllFiles(){
@@ -44,34 +46,39 @@ class FileServices{
     }
 
     static async uploadFile(req, res, file){
-        const mimeType = mime.lookup(file.originalname);
-        if(!common.allowedMimeType.includes(mimeType) || file.size > common.fileSizeLimit){
-            fs.unlinkSync(file.path);
-            return promise.reject(false);
-        }
-        let product = await this.productDataStores.getProductByProductID(req.body.productId);
-        const productPath = product.productPermalink;
-        const uploadDir = path.join('public', 'uploads', productPath);
-        common.checkDirectorySync(uploadDir);
-        let source = fs.createReadStream(file.path);
-        let dest = fs.createWriteStream(path.join(uploadDir, file.originalname.replace(/ /g, '_')));
-        source.pipe(dest);
-        let result = await new promise((resolve, reject) => {
-            source.on('end', async () => {
-                try{
-                    fs.unlinkSync(file.path);
-                    let imagePath = path.join('uploads', productPath, file.originalname.replace(/ /g, '_'));
-                    if(!product.productImage){
-                        product.productImage = imagePath;
-                        await this.productDataStores.setProductProperty(product.productId, {productImage: product.productImage});
+        try{
+            const mimeType = mime.lookup(file.originalname);
+            if(!common.allowedMimeType.includes(mimeType) || file.size > common.fileSizeLimit){
+                fs.unlinkSync(file.path);
+                throw Error(this.enums.UNSUPPORTED_MIME_TYPE);
+            }
+            let product = await this.productDataStores.getProductByProductID(req.body.productId);
+            const productPath = product.productPermalink;
+            const uploadDir = path.join('public', 'uploads', productPath);
+            common.checkDirectorySync(uploadDir);
+            let source = fs.createReadStream(file.path);
+            let dest = fs.createWriteStream(path.join(uploadDir, file.originalname.replace(/ /g, '_')));
+            source.pipe(dest);
+            let result = await new promise((resolve, reject) => {
+                source.on('end', async () => {
+                    try{
+                        fs.unlinkSync(file.path);
+                        let imagePath = path.join('uploads', productPath, file.originalname.replace(/ /g, '_'));
+                        if(!product.productImage){
+                            product.productImage = imagePath;
+                            await this.productDataStores.setProductProperty(product.productId, {productImage: product.productImage});
+                        }
+                        resolve(true);
+                    }catch(e){
+                        reject(false);
                     }
-                    resolve(true);
-                }catch(e){
-                    reject(false);
-                }
+                });
             });
-        });
-        return result;
+            return result;
+        }catch(e){
+            console.log(`Error: uploadFile function: ${e.message}`);
+            throw e;
+        }
     }
 
     static async removeFile(req, res, image){

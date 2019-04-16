@@ -67,7 +67,7 @@ let Enums = {
 
     // common
     UNHANDLED_EXCEPTION: 'unhandled exception',
-
+    UNSUPPORTED_MIME_TYPE: 'unsupported mimeType',
     // routes
     productUpdateRoute: '/admin/product/update'
 };

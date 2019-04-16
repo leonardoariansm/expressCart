@@ -420,22 +420,28 @@ router.post('/admin/api/validate_permalink', async (req, res) => {
 let upload = multer({dest: 'public/uploads/'});
 router.post('/admin/file/upload', common.restrict, common.checkAccess, upload.single('upload_file'), async (req, res, next) => {
     let file = req.file;
-    if(req.file){
-        let result = await FileService.uploadFile(req, res, file);
-        if(result){
-            req.session.message = 'File uploaded successfully';
-            req.session.messageType = 'success';
-            res.redirect('/admin/product/edit/' + req.body.productId);
+    try{
+        if(req.file){
+            let result = await FileService.uploadFile(req, res, file);
+            if(result){
+                req.session.message = 'File uploaded successfully';
+                req.session.messageType = 'success';
+                res.redirect('/admin/product/edit/' + req.body.productId);
+            }else{
+                req.session.message = 'File uploaded successfully';
+                req.session.messageType = 'success';
+                res.redirect('/admin/product/edit/' + req.body.productId);
+            }
         }else{
-            req.session.message = 'File uploaded successfully';
-            req.session.messageType = 'success';
+            // delete the temp file.
+            fs.unlinkSync(file.path);
+
+            // Redirect to error
+            req.session.message = 'File upload error. Please select a file.';
+            req.session.messageType = 'danger';
             res.redirect('/admin/product/edit/' + req.body.productId);
         }
-    }else{
-        // delete the temp file.
-        fs.unlinkSync(file.path);
-
-        // Redirect to error
+    }catch(e){
         req.session.message = 'File upload error. Please select a file.';
         req.session.messageType = 'danger';
         res.redirect('/admin/product/edit/' + req.body.productId);
@@ -454,31 +460,51 @@ router.post('/admin/file/delete', common.restrict, common.checkAccess, async (re
     req.session.message = null;
     req.session.messageType = null;
 
-    let result = await FileService.removeFile(req, res);
-    if(result){
+    try{
+        let result = await FileService.removeFile(req, res);
+        if(result){
+            res.writeHead(200, {'Content-Type': 'application/text'});
+            res.end('File deleted successfully');
+            return;
+        }
+        console.error(colors.red('File delete error'));
         res.writeHead(200, {'Content-Type': 'application/text'});
-        res.end('File deleted successfully');
-        return;
+        res.end('Failed to delete file');
+    }catch(e){
+        console.error(colors.red('File delete error'));
+        res.writeHead(200, {'Content-Type': 'application/text'});
+        res.end('Failed to delete file');
     }
-    console.error(colors.red('File delete error'));
-    res.writeHead(400, {'Content-Type': 'application/text'});
-    res.end('Failed to delete file');
 });
 
 router.get('/admin/files', common.restrict, async (req, res) => {
     // loop files in /public/uploads/
-    let result = await FileService.getAllFiles();
-    res.render('files', {
-        title: 'Files',
-        files: result.fileList,
-        admin: true,
-        dirs: result.dirList,
-        session: req.session,
-        config: configSettings,
-        message: common.clearSessionValue(req.session, 'message'),
-        messageType: common.clearSessionValue(req.session, 'messageType'),
-        route: 'admin'
-    });
+    try{
+        let result = await FileService.getAllFiles();
+        res.render('files', {
+            title: 'Files',
+            files: result.fileList,
+            admin: true,
+            dirs: result.dirList,
+            session: req.session,
+            config: configSettings,
+            message: common.clearSessionValue(req.session, 'message'),
+            messageType: common.clearSessionValue(req.session, 'messageType'),
+            route: 'admin'
+        });
+    }catch(e){
+        res.render('files', {
+            title: 'Files',
+            files: [],
+            admin: true,
+            dirs: [],
+            session: req.session,
+            config: configSettings,
+            message: common.clearSessionValue(req.session, 'message'),
+            messageType: common.clearSessionValue(req.session, 'messageType'),
+            route: 'admin'
+        });
+    }
 });
 
 module.exports = router;
