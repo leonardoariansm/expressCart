@@ -173,7 +173,7 @@ $(document).ready(function (){
             $('#pager').bootpag({
                 total: totalProducts,
                 page: pageNum,
-                maxVisible: 5,
+                maxVisible: Math.min(totalProducts, 5),
                 href: pagerHref,
                 wrapClass: 'pagination',
                 prevClass: 'waves-effect',
