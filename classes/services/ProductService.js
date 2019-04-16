@@ -1,18 +1,9 @@
 const promise = require('bluebird');
-const colors = require('colors');
-const bcrypt = require('bcryptjs');
-const url = require('url');
 const crypto = require('crypto');
 const config = require('config');
-const MangoUtils = require('../utilities/MangoUtils');
-const RedisUtils = require('../Redis/RedisUtils');
-const RedisKeys = require('../Redis/RedisKeys');
-const LunrFullTextSearching = require('./LunrFullTextSearching');
 const StaticFunctions = require('../utilities/staticFunctions');
 const Enums = require('../models/Enums');
-const common = require('../../lib/common');
 const{ProductDataStores} = require('../DataStores/ProductDataStores');
-const ProductUrls = require('../UrlService/ProductUrls');
 const{ProductValidator} = require('./validator/ProductValidator');
 const{ProductRequestProcessor} = require('../RequestProcessor/ProductRequestProcessor');
 const{ProductIndexingService} = require('./Indexing/ProductIndexingService');
@@ -34,8 +25,13 @@ class ProductService{
             let userId = (req.session.user && req.session.user.userId);
             let isAdmin = (req.session.user && req.session.user.isAdmin);
             let productsPerPage = config.get('products.productsPerPage');
+            let numOfProducts = config.get('admins.numOfProducts');
             skipProduct = !isNaN(parseInt(skipProduct)) ? skipProduct : 0;
-            return await this.productDataStores.getLatestAddedProduct(skipProduct, isPublicRoute, userId , productsPerPage, isAdmin);
+            if([true, 'true'].includes(isAdmin)){
+                skipProduct = 0;
+                numOfProducts = !isNaN(parseInt(numOfProducts)) ? parseInt(numOfProducts) : 100;
+            }else numOfProducts = productsPerPage;
+            return await this.productDataStores.getLatestAddedProduct(skipProduct, isPublicRoute, userId, numOfProducts, isAdmin);
         }catch(err){
             console.log(`Error getLatestAddedProduct function: ${err.message}`);
             throw err;

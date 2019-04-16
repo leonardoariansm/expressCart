@@ -156,11 +156,11 @@ class ProductDataStores{
         }
     }
 
-    static async getLatestAddedProduct(skipProduct, isPublicRoute, userId, productsPerPage, isAdmin){
+    static async getLatestAddedProduct(skipProduct, isPublicRoute, userId, numOfProducts, isAdmin){
         try{
             let userIdToProductMappingKey = this.redisKeys.getUserToUserProductsMapping(userId);
             let currentTimeInMs = Date.now();
-            let productIds = await this.redisUtils.getSortedSetRangeByScoreReverse(this.redisKeys.getProductRedisKey(), currentTimeInMs, null, [skipProduct, productsPerPage]);
+            let productIds = await this.redisUtils.getSortedSetRangeByScoreReverse(this.redisKeys.getProductRedisKey(), currentTimeInMs, null, [skipProduct, numOfProducts]);
             if(!isPublicRoute && [false, 'false'].includes(isAdmin)){
                 let tempProductFilterKey = 'tmpUserWiseProdFilterKey';
                 let multi = this.redisUtils.queueSuccessiveCommands();

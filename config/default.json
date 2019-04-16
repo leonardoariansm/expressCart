@@ -42,7 +42,8 @@
     "paths": {
       "login": "admin/login",
       "setup": "admin/setup"
-    }
+    },
+    "numOfProducts": 1000
   },
   "orders": {
     "topNOrderCount": 10,
