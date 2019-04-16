@@ -155,32 +155,30 @@ $(document).ready(function (){
         window.location = '/admin/orders/bystatus/' + $('#orderStatusFilter').val();
     });
 
-    if($('#pager').length){
-        var pageNum = $('#pageNum').val();
-        var pageLen = $('#productsPerPage').val();
-        var productCount = $('#totalProductCount').val();
-        var paginateUrl = $('#paginateUrl').val();
-        var searchTerm = $('#searchTerm').val();
+    var pageNum = $('#pageNum').val();
+    var pageLen = $('#productsPerPage').val();
+    var productCount = $('#totalProductCount').val();
+    var paginateUrl = $('#paginateUrl').val();
+    var searchTerm = $('#searchTerm').val();
 
-        if(searchTerm !== ''){
-            searchTerm = searchTerm + '/';
-        }
+    if(searchTerm !== ''){
+        searchTerm = searchTerm + '/';
+    }
 
-        var pagerHref = '/' + paginateUrl + '/' + searchTerm + '{{number}}';
-        var totalProducts = Math.ceil(productCount / pageLen);
+    var pagerHref = '/' + paginateUrl + '/' + searchTerm + '{{number}}';
+    var totalProducts = 10;
 
-        if(parseInt(productCount) > parseInt(pageLen)){
-            $('#pager').bootpag({
-                total: totalProducts,
-                page: pageNum,
-                maxVisible: Math.min(totalProducts, 5),
-                href: pagerHref,
-                wrapClass: 'pagination',
-                prevClass: 'waves-effect',
-                nextClass: 'waves-effect',
-                activeClass: 'pag-active waves-effect'
-            });
-        }
+    if(parseInt(productCount) > parseInt(pageLen)){
+        $('#pager').bootpag({
+            total: totalProducts,
+            page: pageNum,
+            maxVisible: 5,
+            href: pagerHref,
+            wrapClass: 'pagination',
+            prevClass: 'waves-effect',
+            nextClass: 'waves-effect',
+            activeClass: 'pag-active waves-effect'
+        });
     }
 
     $(document).on('click', '#btnPageUpdate', function(e){
