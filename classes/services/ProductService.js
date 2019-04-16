@@ -34,8 +34,8 @@ class ProductService{
             let userId = (req.session.user && req.session.user.userId);
             let isAdmin = (req.session.user && req.session.user.isAdmin);
             let productsPerPage = config.get('products.productsPerPage');
-            skipProduct = this.staticFunctions.isNotEmpty(skipProduct) ? skipProduct : 0;
-            return await this.productDataStores.getLatestAddedProduct(skipProduct, isPublicRoute, userId, productsPerPage, isAdmin);
+            skipProduct = !isNaN(parseInt(skipProduct)) ? skipProduct : 0;
+            return await this.productDataStores.getLatestAddedProduct(skipProduct, isPublicRoute, userId , productsPerPage, isAdmin);
         }catch(err){
             console.log(`Error getLatestAddedProduct function: ${err.message}`);
             throw err;
