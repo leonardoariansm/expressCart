@@ -20,7 +20,9 @@
       "editProduct": "admin/product/edit",
       "allProduct": "admin/products"
     },
-    "indexingWords": 5
+    "indexingWords": 5,
+    "imageHeight": 150,
+    "imageWidth": 150
   },
   "users": {
     "protocol": "http",
