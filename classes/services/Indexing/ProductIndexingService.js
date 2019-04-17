@@ -248,10 +248,8 @@ class ProductIndexingService extends IndexingService{
             let skipProduct = Math.max(parseInt(pageNum) - 1, 0) * config.get('products.productsPerPage');
             let currentTimeInMs = Date.now();
             let productIds = await this.redisUtils.getSortedSetRangeByScoreReverse(this.redisKeys.getProductRedisKey(), currentTimeInMs, null, [skipProduct, productsPerPage]);
-            await promise.all([
-                this.redisUtils.addToSet(pageNumFilterKey, productIds),
-                this.redisUtils.expireKey(pageNumFilterKey, 300)
-            ]);
+            await this.redisUtils.addToSet(pageNumFilterKey, productIds);
+            this.redisUtils.expireKey(pageNumFilterKey, 300);
             context.intersectionSet.push(pageNumFilterKey);
         }
         return context;

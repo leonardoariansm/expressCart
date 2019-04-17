@@ -478,12 +478,10 @@ class RedisUtils{
     static expireKey(key, expiryTime, multi){
         let that = this;
         if(typeof multi === 'undefined' || multi === null){
-            return new promise((resolve, reject) => {
-                client.ttl(key, expiryTime)
-                    .catch((err) => {
-                        console.log(colors.red(err.stack));
-                    });
-            });
+            return client.ttl(key, expiryTime)
+                .catch((err) => {
+                    console.log(colors.red(err.stack));
+                });
         }
         return multi.ttl(key, expiryTime);
     }
