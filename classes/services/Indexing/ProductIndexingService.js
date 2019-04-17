@@ -2,6 +2,7 @@ const{IndexingService} = require('./IndexingService');
 const promise = require('bluebird');
 const config = require('config');
 const colors = require('colors');
+const elasticlunr = require('elasticlunr');
 const{ProductRequestProcessor} = require('../../RequestProcessor/ProductRequestProcessor');
 
 class ProductIndexingService extends IndexingService{
@@ -9,6 +10,61 @@ class ProductIndexingService extends IndexingService{
         super.injectStaticDependencies.call(this);
         this.maxWordAllowed = config.get('products.indexingWords');
         this.productRequestProcessor = ProductRequestProcessor;
+        this.productsIndex = null;
+    }
+
+    static async getProductLunrIndex(){
+        try{
+            let numOfProducts = config.get('admins.numOfProducts');
+            let products = await this.productDataStores.getLatestAddedProduct(0, true, null, numOfProducts, true);
+            if(this.staticFunctions.isEmpty(products))return null;
+            const productsIndex = elasticlunr(function (){
+                this.addField('productTitle');
+                this.addField('productTags');
+                this.setRef('id');
+            });
+            for(let product of products){
+                let doc = {
+                    'id': product.productId,
+                    'productTitle': product.productTitle,
+                    'productTags': product.productTags
+                };
+                productsIndex.addDoc(doc);
+            }
+            this.productsIndex = productsIndex;
+            return productsIndex;
+        }catch(err){
+            console.log(`Error getProductLunrIndex function: ${err.message}`);
+            throw err;
+        }
+    }
+
+    static async updateProductLunrIndexing(product){
+        try{
+            let doc = {
+                'id': product.productId,
+                'productTitle': product.productTitle,
+                'productTags': product.productTags
+            };
+            await this.productsIndex.update(doc);
+        }catch(err){
+            console.log(`Error updateProductLunrIndexing function: ${err.message}`);
+            throw err;
+        }
+    }
+
+    static async deleteProductLunrIndexing(product){
+        try{
+            let doc = {
+                'id': product.productId,
+                'productTitle': product.productTitle,
+                'productTags': product.productTags
+            };
+            await this.productsIndex.removeDoc(doc);
+        }catch(err){
+            console.log(`Error deleteProductLunrIndexing function: ${err.message}`);
+            throw err;
+        }
     }
 
     static async indexOrder(product){
@@ -16,6 +72,7 @@ class ProductIndexingService extends IndexingService{
         await promise.all([
             this.productTitleIndexing(product, {}, multi),
             this.productTagsIndexing(product, {}, multi),
+            this.updateProductLunrIndexing(product)
             // this.productDescriptionIndexing(product, {}, multi)
         ]);
         await this.redisUtils.executeQueuedCommands(multi);
@@ -100,6 +157,7 @@ class ProductIndexingService extends IndexingService{
         if(currentProduct.productDescription !== newProduct.productDescription){
             // tasks.push(this.productDescriptionIndexing(newProduct, currentProduct, multi));
         }
+        tasks.push(this.updateProductLunrIndexing(newProduct));
         await promise.all(tasks);
         let result = await this.redisUtils.executeQueuedCommands(multi);
         console.log(colors.cyan('- Updated Product indexing complete'));
@@ -108,7 +166,10 @@ class ProductIndexingService extends IndexingService{
 
     static async deleteProductIndexing(product){
         try{
-            await this.updateProductIndexing(product, {});
+            await promise.all([
+                this.updateProductIndexing(product, {}),
+                this.deleteProductLunrIndexing(product)
+            ]);
         }catch(e){
             console.log(`Error deleteProductIndexing function: ${e.message}`);
             throw e;
@@ -182,9 +243,9 @@ class ProductIndexingService extends IndexingService{
         context.intersectionSet = [];
         context.differenceSet = [];
         context.UnionSet = [];
-        if(this.staticFunctions.isNotEmpty(pageNum) && typeof page === 'number'){
+        if(this.staticFunctions.isNotEmpty(pageNum) && !isNaN(parseInt(pageNum))){
             let productsPerPage = config.get('products.productsPerPage');
-            let skipProduct = Math.max(page - 1, 0) * config.get('products.productsPerPage');
+            let skipProduct = Math.max(parseInt(pageNum) - 1, 0) * config.get('products.productsPerPage');
             let currentTimeInMs = Date.now();
             let productIds = await this.redisUtils.getSortedSetRangeByScoreReverse(this.redisKeys.getProductRedisKey(), currentTimeInMs, null, [skipProduct, productsPerPage]);
             await promise.all([
@@ -194,6 +255,22 @@ class ProductIndexingService extends IndexingService{
             context.intersectionSet.push(pageNumFilterKey);
         }
         return context;
+    }
+
+    static async performProductLunrOperation(searchCriteria){
+        try{
+            let searchTerm = searchCriteria.searchTerm;
+            let productsDocs = this.productsIndex.search(searchTerm);
+            if(!productsDocs && productsDocs.length === 0)return[];
+            let productIds = [];
+            for(let productDoc of productsDocs){
+                productIds.push(productDoc.productId);
+            }
+            return productIds;
+        }catch(err){
+            console.log(`Error performProductLunrOperation function: ${err.message}`);
+            throw err;
+        }
     }
 
     static async getOperationsRedisKeys(searchCriteria){
@@ -234,7 +311,11 @@ class ProductIndexingService extends IndexingService{
             this.redisUtils.expireKey(delKey, 10, multi);
         }
         await this.redisUtils.executeQueuedCommands(multi);
-        let productIds = await this.redisUtils.getAllSetMembers(finalKey);
+        let result = await promise.all([
+            this.redisUtils.getAllSetMembers(finalKey),
+            this.performProductLunrOperation(searchCriteria)
+        ]);
+        let productIds = this.staticFunctions.getUnique(result[0], result[1]);
         let products = await this.getProductsByProductIDs(productIds);
         if(this.staticFunctions.isNotEmpty(products) && this.staticFunctions.isNotEmpty(searchCriteria.numOfProducts)){
             products.slice(0, searchCriteria.numOfProducts);

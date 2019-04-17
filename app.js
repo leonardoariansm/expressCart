@@ -14,7 +14,7 @@ const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const MangoUtils = require('./classes/utilities/MangoUtils');
 const RedisUtils = require('./classes/Redis/RedisUtils');
-const{IndexingService} = require('./classes/services/Indexing/IndexingService');
+const{ProductIndexingService} = require('./classes/services/Indexing/ProductIndexingService');
 let handlebars = require('express-handlebars');
 // require the routes
 const index = require('./routes/index');
@@ -312,7 +312,7 @@ MangoUtils.getMangoDbInstance()
         return RedisUtils.getRedisInstance();
     })
     .then((redisInstance) => {
-        IndexingService.runIndexing()
+        ProductIndexingService.getProductLunrIndex()
             .then((productIndex) => {
                 app.productIndex = productIndex;
             })

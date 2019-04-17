@@ -9,6 +9,7 @@ const MangoUtils = require('../../utilities/MangoUtils');
 // const PageServices = require('../PageServices');
 // const CustomerServices = require('../CustomerService');
 const StaticFunctions = require('../../utilities/staticFunctions');
+const{ProductDataStores} = require('../../DataStores/ProductDataStores');
 
 class IndexingService{
     static injectStaticDependencies(){
@@ -16,6 +17,7 @@ class IndexingService{
         this.redisUtils = RedisUtils;
         this.mangoUtils = MangoUtils;
         this.staticFunctions = StaticFunctions;
+        this.productDataStores = ProductDataStores;
     }
 
     static async runIndexing(){

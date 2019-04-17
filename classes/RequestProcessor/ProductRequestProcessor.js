@@ -51,6 +51,7 @@ class ProductRequestProcessor{
             searchCriteria.productTags = keywords;
             searchCriteria.productTitle = keywords;
             searchCriteria.numOfProducts = numOfProducts;
+            searchCriteria.searchTerm = searchTerm;
             searchCriteria.pageNum = pageNum;
             return searchCriteria;
         }catch(e){
