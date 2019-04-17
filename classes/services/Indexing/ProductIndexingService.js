@@ -258,11 +258,11 @@ class ProductIndexingService extends IndexingService{
     static async performProductLunrOperation(searchCriteria){
         try{
             let searchTerm = searchCriteria.searchTerm;
-            let productsDocs = this.productsIndex.search(searchTerm);
+            let productsDocs = this.productsIndex.search(searchTerm, {});
             if(!productsDocs && productsDocs.length === 0)return[];
             let productIds = [];
             for(let productDoc of productsDocs){
-                productIds.push(productDoc.productId);
+                productIds.push(productDoc.ref);
             }
             return productIds;
         }catch(err){

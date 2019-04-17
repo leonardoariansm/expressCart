@@ -155,8 +155,8 @@ class staticFunctions{
     }
 
     static getUnique(array1, array2){
-        if(this.isEmpty(array2))return array2;
-        else if(this.isEmpty(array2))return array2;
+        if(this.isEmpty(array1))return array2;
+        else if(this.isEmpty(array2))return array1;
         let set1 = new Set(array1);
         let set2 = new Set(array2);
         let union = new Set([...set1, ...set2]);
