@@ -281,10 +281,13 @@ class ProductIndexingService extends IndexingService{
         return result;
     }
 
-    static async getFilteredProductByCriteria(searchTerm, numOfProducts, pageNum){
-        let searchCriteria = await this.productRequestProcessor.getRawRequestSearchCriteria(searchTerm, numOfProducts, pageNum);
+    static async getFilteredProductByCriteria(searchTerm, numOfProducts, pageNum, isSearchTermCategory){
+        let searchCriteria = await this.productRequestProcessor.getRawRequestSearchCriteria(searchTerm, numOfProducts, pageNum, isSearchTermCategory);
         if(this.staticFunctions.isEmpty(searchCriteria)){
             return[];
+        }
+        if(this.staticFunctions.isNotEmpty(isSearchTermCategory) && ['true', true].includes(isSearchTermCategory)){
+            return await this.getCategoryProducts(searchCriteria.category);
         }
         let operationRedisKeys = await this.getOperationsRedisKeys(searchCriteria);
         let intersectSet = [];
@@ -315,10 +318,24 @@ class ProductIndexingService extends IndexingService{
         ]);
         let productIds = this.staticFunctions.getUnique(result[0], result[1]);
         let products = await this.getProductsByProductIDs(productIds);
-        if(this.staticFunctions.isNotEmpty(products) && this.staticFunctions.isNotEmpty(searchCriteria.numOfProducts)){
+        if(this.staticFunctions.isNotEmpty(products) && !isNaN(parseInt(numOfProducts))){
             products.slice(0, searchCriteria.numOfProducts);
         }
         return products;
+    }
+
+    static async getCategoryProducts (category, numOfProducts){
+        try{
+            let productIds = await this.productDataStores.getCategoryProductIds(category);
+            let products = await this.getProductsByProductIDs(productIds);
+            if(this.staticFunctions.isNotEmpty(products) && !isNaN(parseInt(numOfProducts))){
+                products.slice(0, numOfProducts);
+            }
+            return products;
+        }catch(e){
+            console.log(`Error getCategoryProducts function: ${e.message}`);
+            throw e;
+        }
     }
 
     static async getProductsByProductIDs(productIds){

@@ -396,50 +396,39 @@ router.get('/search/:searchTerm/:pageNum?', async (req, res) => {
 });
 
 // search products
-router.get('/category/:cat/:pageNum?', (req, res) => {
-    let db = req.app.db;
-    let searchTerm = req.params.cat;
-    let productsIndex = req.app.productsIndex;
-    let config = req.app.config;
+router.get('/category/:cat/:pageNum?', async (req, res) => {
+    let category = req.params.cat;
     let numberProducts = config.productsPerPage ? config.productsPerPage : 6;
-
-    let lunrIdArray = [];
-    productsIndex.search(searchTerm).forEach((id) => {
-        lunrIdArray.push(common.getId(id.ref));
-    });
-
     let pageNum = 1;
     if(req.params.pageNum){
-        pageNum = req.params.pageNum;
+        pageNum = isNaN(parseInt(req.params.pageNum)) ? pageNum : parseInt(req.params.pageNum);
     }
-
-    Promise.all([
-        common.getData(req, pageNum, {_id: {$in: lunrIdArray}}),
-        common.getMenu(db)
-    ])
-    .then(([results, menu]) => {
+    try{
+        let results = await promise.all([
+            ProductIndexingService.getFilteredProductByCriteria(category, null, pageNum, true),
+            AdminServices.getMenu(req, res)
+        ]);
+        let menu = results[1];
+        let products = results[0];
         const sortedMenu = common.sortMenu(menu);
-
-        // If JSON query param return json instead
         if(req.query.json === 'true'){
             res.status(200).json(results.data);
             return;
         }
-
-        res.render(`${config.themeViews}index`, {
+        res.render(`${req.app.config.themeViews}/index`, {
             title: 'Category',
-            results: results.data,
+            results: products,
             filtered: true,
             session: req.session,
-            searchTerm: searchTerm,
-            metaDescription: req.app.config.cartTitle + ' - Category: ' + searchTerm,
+            searchTerm: category,
+            metaDescription: req.app.config.cartTitle + ' - Category: ' + category,
             pageCloseBtn: common.showCartCloseBtn('category'),
             message: common.clearSessionValue(req.session, 'message'),
             messageType: common.clearSessionValue(req.session, 'messageType'),
             productsPerPage: numberProducts,
-            totalProductCount: results.totalProducts,
+            totalProductCount: products.length,
             pageNum: pageNum,
-            menuLink: _.find(sortedMenu.items, (obj) => { return obj.link === searchTerm; }),
+            menuLink: _.find(sortedMenu.items, (obj) => { return obj.link === category; }),
             paginateUrl: 'category',
             menu: sortedMenu,
             helpers: req.handlebars.helpers,
@@ -447,10 +436,31 @@ router.get('/category/:cat/:pageNum?', (req, res) => {
             route: 'customer',
             config: req.app.config
         });
-    })
-    .catch((err) => {
+    }catch(err){
         console.error(colors.red('Error getting products for category', err));
-    });
+        let sortedMenu = common.sortMenu(await AdminServices.getMenu(req, res));
+        res.render(`${req.app.config.themeViews}/index`, {
+            title: 'Category',
+            results: [],
+            filtered: true,
+            session: req.session,
+            searchTerm: category,
+            metaDescription: req.app.config.cartTitle + ' - Category: ' + category,
+            pageCloseBtn: common.showCartCloseBtn('category'),
+            message: common.clearSessionValue(req.session, 'message'),
+            messageType: common.clearSessionValue(req.session, 'messageType'),
+            productsPerPage: numberProducts,
+            totalProductCount: 0,
+            pageNum: pageNum,
+            menuLink: _.find(sortedMenu.items, (obj) => { return obj.link === category; }),
+            paginateUrl: 'category',
+            menu: sortedMenu,
+            helpers: req.handlebars.helpers,
+            showFooter: 'showFooter',
+            route: 'customer',
+            config: req.app.config
+        });
+    }
 });
 
 // return sitemap

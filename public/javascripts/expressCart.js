@@ -104,6 +104,7 @@ $(document).ready(function (){
     });
 
     $('#frmProductTags').tokenfield();
+    $('#frmProductCategory').tokenfield();
 
     $(document).on('click', '.dashboard_list', function(e){
         window.document.location = $(this).attr('href');

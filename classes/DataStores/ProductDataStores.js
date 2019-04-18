@@ -108,6 +108,7 @@ class ProductDataStores{
             let tasks = [];
             let userId = req.session && req.session.user && req.session.user.userId;
             let multi = this.redisUtils.queueSuccessiveCommands();
+            this.redisUtils.removeToSet(this.redisKeys.getCategoryProductMappingKey(product.productCategory), productId, multi);
             this.redisUtils.removeToSet(this.redisKeys.getUserToUserProductsMapping(userId), productId, multi);
             this.redisUtils.delete(this.redisKeys.getProductPermaLinkRediskey(product.productPermalink), multi);
             this.redisUtils.delete(this.redisKeys.getProductDetailsRedisKey(productId), multi);
@@ -144,6 +145,7 @@ class ProductDataStores{
             if(this.staticFunctions.isNotEmpty(userId)){
                 this.redisUtils.addToSet(this.redisKeys.getUserToUserProductsMapping(userId), productId, multi);
             }
+            this.redisUtils.addToSet(this.redisKeys.getCategoryProductMappingKey(productDetails.productCategory), productId, multi);
             this.redisUtils.set(this.redisKeys.getProductPermaLinkRediskey(productDetails.productPermalink), productId, -1, multi);
             this.redisUtils.setMultipleValuesInHash(this.redisKeys.getProductDetailsRedisKey(productId), productDetails, multi);
             this.redisUtils.setValueInSortedSet(this.redisKeys.getProductRedisKey(), currentTimeInMs, productId, multi);
@@ -176,6 +178,16 @@ class ProductDataStores{
             return await this.redisUtils.executeQueuedCommands(multi);
         }catch(err){
             console.log(`Error getLatestAddedProduct function: ${err.message}`);
+            throw err;
+        }
+    }
+
+    static async getCategoryProductIds(category){
+        try{
+            if(this.staticFunctions.isEmpty(category))return[];
+            return await this.redisUtils.getAllSetMembers(this.redisKeys.getCategoryProductMappingKey(category));
+        }catch(err){
+            console.log(`Error getCategoryProductIds function: ${err.message}`);
             throw err;
         }
     }

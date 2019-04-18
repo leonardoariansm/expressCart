@@ -20,7 +20,8 @@ class ProductRequestProcessor{
             productComment: common.checkboxBool(req.body.frmProductComment),
             productAddedDate: new Date(),
             productStock: req.body.frmProductStock ? parseInt(req.body.frmProductStock) : 0,
-            productImage: req.body.frmProductImage
+            productImage: req.body.frmProductImage,
+            productCategory: req.body.frmProductCategory
         };
         return product;
     }
@@ -38,18 +39,20 @@ class ProductRequestProcessor{
             productComment: StaticFunctions.getNonEmptyValue([common.checkboxBool(rawRequestProduct.productComment), currentProduct.productComment]),
             productAddedDate: StaticFunctions.getNonEmptyValue([currentProduct.productAddedDate, new Date()]),
             productStock: StaticFunctions.getNonEmptyValue([(rawRequestProduct.productStock ? parseInt(rawRequestProduct.frmProductStock) : null), currentProduct.productStock]),
-            productImage: StaticFunctions.getNonEmptyValue([rawRequestProduct.productImage, currentProduct.productImage])
+            productImage: StaticFunctions.getNonEmptyValue([rawRequestProduct.productImage, currentProduct.productImage]),
+            productCategory: StaticFunctions.getNonEmptyValue([rawRequestProduct.productCategory, currentProduct.productCategory])
         };
         return product;
     }
 
-    static async getRawRequestSearchCriteria(searchTerm, numOfProducts, pageNum){
+    static async getRawRequestSearchCriteria(searchTerm, numOfProducts, pageNum, isSearchTermCategory){
         try{
             let searchCriteria = {};
             let keywords = this.staticFunctions.getPhrases(searchTerm, ' ');
             searchCriteria.productDescription = keywords;
             searchCriteria.productTags = keywords;
             searchCriteria.productTitle = keywords;
+            searchCriteria.category = searchTerm;
             searchCriteria.numOfProducts = numOfProducts;
             searchCriteria.searchTerm = searchTerm;
             searchCriteria.pageNum = pageNum;
