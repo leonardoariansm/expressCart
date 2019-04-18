@@ -26,9 +26,9 @@ class ProductService{
             let isAdmin = (req.session.user && req.session.user.isAdmin);
             let isAdminRoute = req.originalUrl.includes('admin');
             let productsPerPage = config.get('products.productsPerPage');
-            let numOfProducts = isAdminRoute ? config.get('admins.numOfProducts') : productsPerPage;
+            let numOfProducts = config.get('admins.numOfProducts');
             skipProduct = !isNaN(parseInt(skipProduct)) ? skipProduct : 0;
-            if([true, 'true'].includes(isAdmin)){
+            if([true, 'true'].includes(isAdminRoute)){
                 skipProduct = 0;
                 numOfProducts = !isNaN(parseInt(numOfProducts)) ? parseInt(numOfProducts) : 100;
             }else numOfProducts = productsPerPage;
