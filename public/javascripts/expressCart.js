@@ -166,10 +166,10 @@ $(document).ready(function (){
         searchTerm = searchTerm + '/';
     }
 
-    var totalProducts = 10;
+    var totalPages = 10;
     if(parseInt(productCount) >= parseInt(pageLen)){
         $('#pager').bootpag({
-            total: totalProducts,          // total pages
+            total: totalPages,          // total pages
             page: pageNum,            // default page
             maxVisible: 5,     // visible pagination
             leaps: true,         // next/prev leaps through maxVisible
