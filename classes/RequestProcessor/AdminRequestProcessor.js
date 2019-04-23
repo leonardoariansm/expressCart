@@ -14,13 +14,13 @@ class AdminRequestProcessor{
         let subTitles = (this.staticFunctions.isNotEmpty(menu.title)) ? menu.title.split(':-')[1].trim() : null;
         menu.title = (this.staticFunctions.isNotEmpty(menu.title)) ? menu.title.split(':-')[0].trim() : menu.title;
         if(this.staticFunctions.isNotEmpty(subTitles)){
-            subTitles = subTitles.split(',');
-            let subItem = {};
+            subTitles = [...new Set(subTitles.split(','))];
             for(let subtitle in subTitles){
+                let subItem = {};
                 subItem.subTitle = subTitles[subtitle].trim();
                 subItem.subTitleLink = `/category/${subItem.subTitle}`;
+                if(this.staticFunctions.isNotEmpty(subItem)) subItems.push(subItem);
             }
-            if(this.staticFunctions.isNotEmpty(subItem)) subItems.push(subItem);
         }
         menu.subItems = JSON.stringify(subItems);
         return menu;
