@@ -59,6 +59,9 @@ class ProductDataStores{
                 throw Error(this.enums.PRODUCT_PERMALINK_EMPTY);
             }
             let productId = await this.redisUtils.get(this.redisKeys.getProductPermaLinkRediskey(productPermalink));
+            if(this.staticFunctions.isEmpty(productId)){
+                throw Error(this.enums.INVALID_PRODUCT_PERMALINK);
+            }
             return productId;
         }catch(e){
             console.log(`Error: getProductIdByProductPermalink function: ${e.message}`);

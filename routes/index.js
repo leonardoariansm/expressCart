@@ -127,11 +127,11 @@ router.get('/cartPartial', async (req, res) => {
 });
 
 // show an individual product
-router.get('/product/:id', async (req, res) => {
+router.get(/product\/*/, async (req, res) => {
     try{
         let cartTitle = config.get('cartTitle');
         let themeViews = config.get('themeViews');
-        let productSearchId = req.params.id;
+        let productSearchId = decodeURI(req.url.split('/product/')[1]);
         if(staticFunctions.isEmpty(productSearchId)){
             throw Error(Enums.PRODUCT_ID_INVALID);
         }
@@ -172,13 +172,7 @@ router.get('/product/:id', async (req, res) => {
             });
         });
     }catch(err){
-        switch(err.message){
-            case Enums.PRODUCT_ID_INVALID:
-                res.render('error', {title: 'Not found', message: 'Product not found', helpers: req.handlebars.helpers});
-                break;
-            default:
-                console.log(err.stack);
-        }
+        res.render('error', {title: 'Not found', message: 'Product not found', helpers: req.handlebars.helpers});
     }
 });
 
@@ -544,6 +538,14 @@ router.get('/page/:pageNum', async (req, res, next) => {
                 });
                 break;
             default:
+                res.status(404).render('error', {
+                    title: '404 Error - Page not found',
+                    message: '404 Error - Page not found',
+                    helpers: req.handlebars.helpers,
+                    showFooter: 'showFooter',
+                    menu: common.sortMenu({}),
+                    config: req.app.config
+                });
                 console.error(colors.red('Error getting products for page', err));
         }
     }
@@ -603,6 +605,14 @@ router.get('/:page?', async (req, res, next) => {
                 });
                 break;
             default:
+                res.status(404).render('error', {
+                    title: '404 Error - Page not found',
+                    message: '404 Error - Page not found',
+                    helpers: req.handlebars.helpers,
+                    showFooter: 'showFooter',
+                    menu: common.sortMenu({}),
+                    config: req.app.config
+                });
                 console.error(colors.red('Error getting products for page', err));
         }
     }
