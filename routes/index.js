@@ -127,7 +127,7 @@ router.get('/cartPartial', async (req, res) => {
 });
 
 // show an individual product
-router.get(/product\/*/, async (req, res) => {
+router.get(/^\/product\/*/, async (req, res) => {
     try{
         let cartTitle = config.get('cartTitle');
         let themeViews = config.get('themeViews');
