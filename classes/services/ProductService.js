@@ -82,7 +82,10 @@ class ProductService{
             let results = await promise.all([
                 this.productDataStores.getProductByProductID(productId),
                 this.productDataStores.getProductIdByProductPermalink(rawRequestProduct.productPermalink)
-            ]);
+            ].map(p => p.catch((err) => undefined))) /* omitting all error */
+                .then((result) => {
+                    return result;
+                });
             let productDetails = results[0];
             let isProductExists = (this.staticFunctions.isNotEmpty(productDetails));
             let productIdLinkWithProductPermaLink = results[1];
