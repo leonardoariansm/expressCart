@@ -70,6 +70,9 @@ class AdminServices{
             }
             let items = await this.redisUtils.executeQueuedCommands(multi);
             if(this.staticFuntions.isEmpty(items))return menu;
+            for(let key in items){
+                if(this.staticFuntions.isNotEmpty(items[key].subItems)) items[key].subItems = JSON.parse(items[key].subItems);
+            }
             menu.items = items;
             return menu;
         }catch(e){
